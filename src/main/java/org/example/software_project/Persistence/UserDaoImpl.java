@@ -3,10 +3,8 @@ package org.example.software_project.Persistence;
 import lombok.extern.slf4j.Slf4j;
 import org.example.software_project.business.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.*;
+
 @Slf4j
 public class UserDaoImpl extends MySQLDao implements UserDao {
 
@@ -68,4 +66,48 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
     }
 
 
+
+/**
+ * Logss in the user by validating/checking the provided username and password with the database.
+ *
+ * @param username the username of the user trying to log in
+ * @param password the password of the user trying to log in
+ * @return object if the login is successful, or null if the credentials are invalid
+ * @throws IllegalArgumentException if either the username or password is null or blank
+ */
+@Override
+public User login(String username, String password) {
+    if (username == null || username.isBlank()) {
+        throw new IllegalArgumentException("You must enter a username to login");
+    }
+    if (password == null || password.isBlank()) {
+        throw new IllegalArgumentException("You must enter a password to login");
+    }
+
+    String sql = "SELECT * FROM users WHERE name = ? AND password COLLATE utf8mb4_bin = ?";
+    try (Connection conn = getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, username);
+        ps.setString(2, password);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return User.builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .email(rs.getString("email"))
+                        .password(rs.getString("password"))
+                        .phone(rs.getString("phone"))
+                        .role(rs.getInt("role"))
+                        .createdAt(rs.getTimestamp("created_at").toLocalDateTime()) // Convert Timestamp to LocalDateTime
+                        .build();
+            }
+
+        }
+
+    } catch (SQLException e) {
+        log.error("An error occurred when logging in user with username: {}", username, e);
+    }
+    return null;
+}
 }
