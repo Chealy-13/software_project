@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<body>
+
+<div th:fragment="menu-bar">
+    <nav class="menu-bar">
+        <ul>
+            <li><a th:href="@{/}" th:text="#{menu.home}">Home</a></li>
+<!--            <li><a th:href="@{/greeting}" th:text="#{menu.greeting}">Greeting</a></li>-->
+<!--            <li th:if="${session.currentUser == null}"><a th:href="@{/loginPage}" th:text="#{menu.login}">Login</a></li>-->
+<!--            <li th:if="${session.currentUser == null}"><a th:href="@{/registerPage}" th:text="#{menu.register}">Register</a></li>-->
+<!--            <li th:if="${session.currentUser != null}"><a th:href="@{/profile}" th:text="#{menu.profile}">Profile</a></li>-->
+<!--            <li th:if="${session.currentUser != null}"><a th:href="@{/editProfile}" th:text="#{menu.editProfile}">Edit Profile</a></li>-->
+
+        </ul>
+        <div th:replace="~{Additional/language_menu :: language-menu-bar}" class="language-menu"></div>
+    </nav>
+</div>
+
+</body>
+</html>
