@@ -1,6 +1,5 @@
 package org.example.software_project.Persistence;
 import lombok.extern.slf4j.Slf4j;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
