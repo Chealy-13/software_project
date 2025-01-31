@@ -10,7 +10,7 @@ CREATE TABLE Users (
                        email VARCHAR(100) NOT NULL UNIQUE,
                        password VARCHAR(255) NOT NULL,
                        phone VARCHAR(20) NOT NULL,
-                       role ENUM('Buyer', 'Seller', 'Admin') DEFAULT 'Buyer',
+                       role INT NOT NULL DEFAULT 1, -- 1 = buyer, 2 = seller, 3 = admin
                        profile_picture VARCHAR(255),
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
