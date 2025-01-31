@@ -1,6 +1,7 @@
 package org.example.software_project.Persistence;
 
 import org.example.software_project.business.Vehicle;
+import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,6 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class VehicleDaoImpl extends MySQLDao implements VehicleDao{
 
     /**
