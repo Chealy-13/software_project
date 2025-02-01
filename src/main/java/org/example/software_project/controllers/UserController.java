@@ -30,7 +30,6 @@ public class UserController {
                            @RequestParam(name = "password") String password,
                            @RequestParam(name = "confirmPass") String confirm,
                            @RequestParam(name = "phone") String phone,
-                           @RequestParam(name = "role", required = false, defaultValue = "1") int role, // Default to "buyer" if not provided
                            @RequestParam(name = "profile_picture", required = false) String profilePicture,
                            @RequestParam(name = "email") String email,
                            Model model, HttpSession session) {
@@ -60,8 +59,7 @@ public class UserController {
                 .password(password)
                 .email(email)
                 .phone(phone)
-                .role(role)
-                .profile_picture(profilePicture)
+                .profilePicture(profilePicture)
                 .build();
 
         try {
@@ -97,12 +95,13 @@ public class UserController {
     }
 
     @PostMapping("login")
-    public String login(@RequestParam(name = "username") String username,
+    public String login(@RequestParam(name = "name") String name,
                         @RequestParam(name = "password") String password,
                         Model model, HttpSession session) {
+
         String errorMsg = null;
-        if (username == null || username.isBlank()) {
-            errorMsg = "Cannot login without a username";
+        if (name == null || name.isBlank()) {
+            errorMsg = "Cannot login without a name";
         } else if (password == null || password.isBlank()) {
             errorMsg = "Cannot login without a password";
         }
@@ -110,17 +109,31 @@ public class UserController {
             model.addAttribute("errorMessage", errorMsg);
             return "login";
         }
+
         UserDao userDao = new UserDaoImpl("database.properties");
-        User loggedInUser = userDao.login(username, password);
+        User loggedInUser = userDao.login(name, password);
+
         if (loggedInUser != null) {
-            String success = "Login successfully";
-            model.addAttribute("message", success);
             session.setAttribute("currentUser", loggedInUser);
+            model.addAttribute("successMessage", "Login successful! Welcome, " + loggedInUser.getName() + " 🎉");
             return "index";
         } else {
-            String failed = "Username/password incorrect.";
-            model.addAttribute("errorMessage", failed);
+            model.addAttribute("errorMessage", "Name/password incorrect.");
             return "login";
         }
+    }
+
+    /**
+     * This logs out from the current user invalidating their session.
+     *
+     * @param model The model object to display a logout message.
+     *              Returns to the index.html page after successfully logging out the user.
+     */
+    @GetMapping("/logout")
+    public String logout(Model model, HttpSession session) {
+        session.setAttribute("currentUser", null);
+
+        model.addAttribute("message", "Logout successful!");
+        return "index";
     }
 }
