@@ -63,8 +63,8 @@ class UserDaoImplRegisterTest {
                 .profilePicture(null)
                 .build();
 
-        boolean result = userDao.register(invalidUser);
-        assertFalse(result, "User with an invalid email should not be registered.");
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> userDao.register(invalidUser));
+        assertEquals("Invalid email format.", e.getMessage());
     }
 
     @Test
