@@ -81,7 +81,7 @@ public class MySQLDao {
         // Where no values exist for a property, a default is used
         String driver = properties.getProperty("driver", "com.mysql.cj.jdbc.Driver");
         String url = properties.getProperty("url", "jdbc:mysql://127.0.0.1:3306/");
-        String database = properties.getProperty("database", "musiclibary");
+        String database = properties.getProperty("database", "car_marketplace");
         String username = properties.getProperty("username", "root");
         String password = properties.getProperty("password", "");
 
