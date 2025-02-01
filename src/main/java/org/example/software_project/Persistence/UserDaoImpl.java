@@ -24,10 +24,10 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
     @Override
     public boolean register(User user) {
         if (!validateUser(user)) {
-            throw new IllegalArgumentException("You must enter a username, password, email, and phone number to proceed.");
+            throw new IllegalArgumentException("You must enter a username, first name, last name, password, email, and phone number to proceed.");
         }
 
-        String sql = "INSERT INTO Users (name, email, password, phone, profile_picture) VALUES(?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Users (username,firstName, secondName, email, password, phone, profile_picture) VALUES(?, ?, ?, ?, ?,?,?)";
         try (Connection conn = getConnection()) {
             if (conn == null) {
                 log.error("Failed to get database connection.");
@@ -36,7 +36,9 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
 
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 // Set the parameters for the SQL query
-                ps.setString(1, user.getName()); // Name
+                ps.setString(1, user.getUsername()); // Name
+                ps.setString(1, user.getFirstName());
+                ps.setString(1, user.getSecondName());
                 ps.setString(2, user.getEmail()); // Email
                 ps.setString(3, user.getPassword()); // Password
                 ps.setString(4, user.getPhone()); // Phone
@@ -51,14 +53,14 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             }
 
         } catch (SQLException e) {
-            log.error("SQL exception when registering user: {}", user.getName(), e);
+            log.error("SQL exception when registering user: {}", user.getUsername(), e);
         }
         return false;
     }
 
     private boolean validateUser(User user) {
         return user != null &&
-                user.getName() != null && !user.getName().isBlank() && // Ensure 'name' (username) is provided
+                user.getUsername() != null && !user.getUsername().isBlank() && // Ensure 'username' is provided
                 user.getPassword() != null && !user.getPassword().isBlank() && // Ensure 'password' is provided
                 user.getEmail() != null && !user.getEmail().isBlank() && // Ensure 'email' is provided
                 user.getPhone() != null && !user.getPhone().isBlank(); // Ensure 'phone' is provided
@@ -68,31 +70,33 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
     /**
      * Logss in the user by validating/checking the provided username and password with the database.
      *
-     * @param name     the username of the user trying to log in
+     * @param username     the username of the user trying to log in
      * @param password the password of the user trying to log in
      * @return object if the login is successful, or null if the credentials are invalid
      * @throws IllegalArgumentException if either the username or password is null or blank
      */
     @Override
-    public User login(String name, String password) {
-        if (name == null || name.isBlank()) {
+    public User login(String username, String password) {
+        if (username == null || username.isBlank()) {
             throw new IllegalArgumentException("You must enter a username to login");
         }
         if (password == null || password.isBlank()) {
             throw new IllegalArgumentException("You must enter a password to login");
         }
 
-        String sql = "SELECT * FROM users WHERE name = ? AND password = ?";
+        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, name);
+            ps.setString(1, username);
             ps.setString(2, password);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return User.builder()
                             .id(rs.getInt("id"))
-                            .name(rs.getString("name"))
+                            .username(rs.getString("username"))
+                            .firstName(rs.getString("firstName"))
+                            .secondName(rs.getString("secondName"))
                             .email(rs.getString("email"))
                             .password(rs.getString("password"))
                             .phone(rs.getString("phone"))
@@ -103,7 +107,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             }
 
         } catch (SQLException e) {
-            log.error("An error occurred when logging in user with username: {}", name, e);
+            log.error("An error occurred when logging in user with username: {}", username, e);
         }
         return null;
     }

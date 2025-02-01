@@ -27,6 +27,8 @@ public class UserController {
 
     @PostMapping("register")
     public String register(@RequestParam(name = "username") String username,
+                           @RequestParam(name = "firstName") String firstName,
+                           @RequestParam(name = "secondName") String secondName,
                            @RequestParam(name = "password") String password,
                            @RequestParam(name = "confirmPass") String confirm,
                            @RequestParam(name = "phone") String phone,
@@ -55,7 +57,7 @@ public class UserController {
         }
 
         User newUser = User.builder()
-                .name(username)
+                .username(username)
                 .password(password)
                 .email(email)
                 .phone(phone)
@@ -66,7 +68,7 @@ public class UserController {
             boolean registered = userDao.register(newUser);
             if (registered) {
                 session.setAttribute("currentUser", newUser);
-                session.setAttribute("successMessage", "Registration successful! Welcome, " + newUser.getName() + " 🎉");
+                session.setAttribute("successMessage", "Registration successful! Welcome, " + newUser.getUsername() + " 🎉");
                 return "redirect:/";
 
             }
@@ -97,12 +99,12 @@ public class UserController {
     }
 
     @PostMapping("login")
-    public String login(@RequestParam(name = "name") String name,
+    public String login(@RequestParam(name = "username") String username,
                         @RequestParam(name = "password") String password,
                         Model model, HttpSession session) {
 
         String errorMsg = null;
-        if (name == null || name.isBlank()) {
+        if (username == null || username.isBlank()) {
             errorMsg = "Cannot login without a name";
         } else if (password == null || password.isBlank()) {
             errorMsg = "Cannot login without a password";
@@ -113,11 +115,11 @@ public class UserController {
         }
 
         UserDao userDao = new UserDaoImpl("database.properties");
-        User loggedInUser = userDao.login(name, password);
+        User loggedInUser = userDao.login(username, password);
 
         if (loggedInUser != null) {
             session.setAttribute("currentUser", loggedInUser);
-            model.addAttribute("successMessage", "Login successful! Welcome, " + loggedInUser.getName() + " 🎉");
+            model.addAttribute("successMessage", "Login successful! Welcome, " + loggedInUser.getUsername() + " 🎉");
             return "index";
         } else {
             model.addAttribute("errorMessage", "Name/password incorrect.");
