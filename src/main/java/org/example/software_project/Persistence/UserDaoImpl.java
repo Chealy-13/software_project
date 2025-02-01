@@ -27,6 +27,25 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             throw new IllegalArgumentException("You must enter a username, first name, last name, password, email, and phone number to proceed.");
         }
 
+        if (!user.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            throw new IllegalArgumentException("Invalid email format.");
+        }
+
+
+        if (user.getPassword().length() < 8) {
+            throw new IllegalArgumentException("Password must be at least 8 characters long.");
+        }
+
+
+        if (user.getUsername().length() > 20) {
+            throw new IllegalArgumentException("Username is too long. Maximum 20 characters.");
+        }
+
+
+        if (isUsernameOrEmailTaken(user.getUsername(), user.getEmail())) {
+            return false;
+        }
+
         String sql = "INSERT INTO Users (username,firstName, secondName, email, password, phone, profile_picture) VALUES(?, ?, ?, ?, ?,?,?)";
         try (Connection conn = getConnection()) {
             if (conn == null) {
@@ -110,5 +129,23 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             log.error("An error occurred when logging in user with username: {}", username, e);
         }
         return null;
+    }
+
+    private boolean isUsernameOrEmailTaken(String username, String email) {
+        String checkSql = "SELECT COUNT(*) FROM Users WHERE username = ? OR email = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(checkSql)) {
+            ps.setString(1, username);
+            ps.setString(2, email);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0; // If the count is greater than 0, the username/email is taken
+                }
+            }
+        } catch (SQLException e) {
+            log.error("Error checking for duplicate username or email: {}", e.getMessage());
+        }
+        return false;
     }
 }
