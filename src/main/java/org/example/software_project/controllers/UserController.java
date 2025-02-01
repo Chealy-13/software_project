@@ -66,7 +66,9 @@ public class UserController {
             boolean registered = userDao.register(newUser);
             if (registered) {
                 session.setAttribute("currentUser", newUser);
-                return "redirect:/payment";
+                session.setAttribute("successMessage", "Registration successful! Welcome, " + newUser.getName() + " 🎉");
+                return "redirect:/";
+
             }
         } catch (IllegalStateException e) {
             model.addAttribute("errorMessage", "Username or email already exists. Please choose a different one.");
