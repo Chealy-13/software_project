@@ -1,6 +1,5 @@
 package org.example.software_project.Persistence;
 
-
 import org.example.software_project.business.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
