@@ -8,15 +8,15 @@ import java.sql.*;
 @Slf4j
 public class UserDaoImpl extends MySQLDao implements UserDao {
 
-    public UserDaoImpl(){
+    public UserDaoImpl() {
         super();
     }
 
-    public UserDaoImpl(Connection conn){
+    public UserDaoImpl(Connection conn) {
         super(conn);
     }
 
-    public UserDaoImpl(String propertiesFilename){
+    public UserDaoImpl(String propertiesFilename) {
         super(propertiesFilename);
     }
 
@@ -27,7 +27,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             throw new IllegalArgumentException("You must enter a username, password, email, and phone number to proceed.");
         }
 
-        String sql = "INSERT INTO Users (name, email, password, phone, role, profile_picture) VALUES(?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Users (name, email, password, phone, profile_picture) VALUES(?, ?, ?, ?, ?)";
         try (Connection conn = getConnection()) {
             if (conn == null) {
                 log.error("Failed to get database connection.");
@@ -40,8 +40,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
                 ps.setString(2, user.getEmail()); // Email
                 ps.setString(3, user.getPassword()); // Password
                 ps.setString(4, user.getPhone()); // Phone
-                ps.setInt(5, user.getRole()); // Role (default is 1, buyer)
-                ps.setString(6, user.getProfile_picture()); // Profile picture (nullable)
+                 ps.setString(5, user.getProfilePicture()); // Profile picture (nullable)
 
                 int rowsAffected = ps.executeUpdate();
                 return rowsAffected > 0;
@@ -66,48 +65,47 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
     }
 
 
-
-/**
- * Logss in the user by validating/checking the provided username and password with the database.
- *
- * @param username the username of the user trying to log in
- * @param password the password of the user trying to log in
- * @return object if the login is successful, or null if the credentials are invalid
- * @throws IllegalArgumentException if either the username or password is null or blank
- */
-@Override
-public User login(String username, String password) {
-    if (username == null || username.isBlank()) {
-        throw new IllegalArgumentException("You must enter a username to login");
-    }
-    if (password == null || password.isBlank()) {
-        throw new IllegalArgumentException("You must enter a password to login");
-    }
-
-    String sql = "SELECT * FROM users WHERE name = ? AND password COLLATE utf8mb4_bin = ?";
-    try (Connection conn = getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setString(1, username);
-        ps.setString(2, password);
-
-        try (ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                return User.builder()
-                        .id(rs.getInt("id"))
-                        .name(rs.getString("name"))
-                        .email(rs.getString("email"))
-                        .password(rs.getString("password"))
-                        .phone(rs.getString("phone"))
-                        .role(rs.getInt("role"))
-                        .createdAt(rs.getTimestamp("created_at").toLocalDateTime()) // Convert Timestamp to LocalDateTime
-                        .build();
-            }
-
+    /**
+     * Logss in the user by validating/checking the provided username and password with the database.
+     *
+     * @param name     the username of the user trying to log in
+     * @param password the password of the user trying to log in
+     * @return object if the login is successful, or null if the credentials are invalid
+     * @throws IllegalArgumentException if either the username or password is null or blank
+     */
+    @Override
+    public User login(String name, String password) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("You must enter a username to login");
+        }
+        if (password == null || password.isBlank()) {
+            throw new IllegalArgumentException("You must enter a password to login");
         }
 
-    } catch (SQLException e) {
-        log.error("An error occurred when logging in user with username: {}", username, e);
+        String sql = "SELECT * FROM users WHERE name = ? AND password = ?"; // ✅ Removed COLLATE utf8mb4_bin
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, name);
+            ps.setString(2, password);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return User.builder()
+                            .id(rs.getInt("id"))
+                            .name(rs.getString("name"))
+                            .email(rs.getString("email"))
+                            .password(rs.getString("password"))
+                            .phone(rs.getString("phone"))
+
+                            .profilePicture(rs.getString("profile_picture"))
+                            .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
+                            .build();
+                }
+            }
+
+        } catch (SQLException e) {
+            log.error("An error occurred when logging in user with username: {}", name, e);
+        }
+        return null;
     }
-    return null;
-}
 }
