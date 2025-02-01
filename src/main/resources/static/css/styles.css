@@ -10,3 +10,36 @@ body {
     padding: 20px;
     color: black;
 }
+
+
+.table-container {
+    background-color: transparent !important;
+    padding: 0px !important;
+    margin-top: 20px;
+    box-shadow: none;
+}
+
+.table {
+    background-color: black;
+    color: white !important;
+    border-collapse: collapse;
+}
+
+.table th {
+    background-color: black !important;
+    color: white !important;
+    padding: 10px;
+    text-align: center;
+    border: 2px solid white !important;
+}
+
+.table td {
+    background-color: black !important;
+    color: white !important;
+    padding: 10px;
+    border: 2px solid white !important;
+}
+
+.table-bordered {
+    border: 2px solid white !important;
+}
