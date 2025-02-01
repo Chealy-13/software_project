@@ -30,11 +30,11 @@ public class VehicleController {
      * @param model used to pass data to the view
      * @return the name of the Thymeleaf template ("vehicles")
      */
-    @GetMapping("/vehicle")
+    @GetMapping("/vehicles")
     public String getAllVehicles(Model model) {
         List<Vehicle> vehicles = vehicleDao.getAllVehicles();
         model.addAttribute("vehicles", vehicles);
-        return "vehicles";
+        return "allVehicles";
     }
 
 
