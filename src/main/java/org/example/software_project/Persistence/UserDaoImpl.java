@@ -37,19 +37,19 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 // Set the parameters for the SQL query
                 ps.setString(1, user.getUsername()); // Name
-                ps.setString(1, user.getFirstName());
-                ps.setString(1, user.getSecondName());
-                ps.setString(2, user.getEmail()); // Email
-                ps.setString(3, user.getPassword()); // Password
-                ps.setString(4, user.getPhone()); // Phone
-                 ps.setString(5, user.getProfilePicture()); // Profile picture (nullable)
+                ps.setString(2, user.getFirstName());
+                ps.setString(3, user.getSecondName());
+                ps.setString(4, user.getEmail()); // Email
+                ps.setString(5, user.getPassword()); // Password
+                ps.setString(6, user.getPhone()); // Phone
+                 ps.setString(7, user.getProfilePicture()); // Profile picture (nullable)
 
                 int rowsAffected = ps.executeUpdate();
                 return rowsAffected > 0;
 
             } catch (SQLIntegrityConstraintViolationException e) {
                 log.error("Username or email already exists, please try again: {}", user.getEmail());
-                throw new IllegalStateException("Username or email already exists, please choose a different one.");
+                throw new IllegalStateException("Username or email already exists, please choose a different one.", e);
             }
 
         } catch (SQLException e) {

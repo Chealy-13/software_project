@@ -59,6 +59,8 @@ public class UserController {
         User newUser = User.builder()
                 .username(username)
                 .password(password)
+                .firstName(firstName)
+                .secondName(secondName)
                 .email(email)
                 .phone(phone)
                 .profilePicture(profilePicture)
