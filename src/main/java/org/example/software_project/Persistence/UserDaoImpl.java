@@ -82,7 +82,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             throw new IllegalArgumentException("You must enter a password to login");
         }
 
-        String sql = "SELECT * FROM users WHERE name = ? AND password = ?"; // ✅ Removed COLLATE utf8mb4_bin
+        String sql = "SELECT * FROM users WHERE name = ? AND password = ?";
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, name);
@@ -96,7 +96,6 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
                             .email(rs.getString("email"))
                             .password(rs.getString("password"))
                             .phone(rs.getString("phone"))
-
                             .profilePicture(rs.getString("profile_picture"))
                             .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
                             .build();
