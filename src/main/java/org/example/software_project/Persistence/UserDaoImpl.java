@@ -3,6 +3,7 @@ package org.example.software_project.Persistence;
 import lombok.extern.slf4j.Slf4j;
 import org.example.software_project.business.User;
 
+
 import java.sql.*;
 
 @Slf4j
@@ -45,6 +46,8 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
         if (isUsernameOrEmailTaken(user.getUsername(), user.getEmail())) {
             return false;
         }
+        String hashedPassword = org.mindrot.jbcrypt.BCrypt.hashpw(user.getPassword(), org.mindrot.jbcrypt.BCrypt.gensalt());
+        user.setPassword(hashedPassword);
 
         String sql = "INSERT INTO Users (username,firstName, secondName, email, password, phone, profile_picture) VALUES(?, ?, ?, ?, ?,?,?)";
         try (Connection conn = getConnection()) {
@@ -52,6 +55,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
                 log.error("Failed to get database connection.");
                 return false;
             }
+
 
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 // Set the parameters for the SQL query
