@@ -107,25 +107,33 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             throw new IllegalArgumentException("You must enter a password to login");
         }
 
-        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+        String sql = "SELECT * FROM users WHERE username = ?";
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setString(1, username);
-            ps.setString(2, password);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return User.builder()
-                            .id(rs.getInt("id"))
-                            .username(rs.getString("username"))
-                            .firstName(rs.getString("firstName"))
-                            .secondName(rs.getString("secondName"))
-                            .email(rs.getString("email"))
-                            .password(rs.getString("password"))
-                            .phone(rs.getString("phone"))
-                            .profilePicture(rs.getString("profile_picture"))
-                            .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
-                            .build();
+
+                    String hashedPassword = rs.getString("password");
+
+                     if (org.mindrot.jbcrypt.BCrypt.checkpw(password, hashedPassword)) {
+                         return User.builder()
+                                .id(rs.getInt("id"))
+                                .username(rs.getString("username"))
+                                .firstName(rs.getString("firstName"))
+                                .secondName(rs.getString("secondName"))
+                                .email(rs.getString("email"))
+                                .password(rs.getString("password")) 
+                                .phone(rs.getString("phone"))
+                                .profilePicture(rs.getString("profile_picture"))
+                                .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
+                                .build();
+                    } else {
+                        log.warn("Invalid login attempt for username: {}", username);
+                        return null;
+                    }
                 }
             }
 
@@ -144,7 +152,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt(1) > 0; // If the count is greater than 0, the username/email is taken
+                    return rs.getInt(1) > 0;
                 }
             }
         } catch (SQLException e) {
