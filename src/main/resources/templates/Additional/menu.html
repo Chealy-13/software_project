@@ -25,6 +25,10 @@
                         <a class="nav-link text-white fw-semibold" th:href="@{/registerPage}">Register</a>
                     </li>
                     <li class="nav-item" th:if="${session.currentUser != null}">
+                        <a class="nav-link text-white fw-semibold" th:href="@{/profile}">Profile</a>
+                    </li>
+
+                    <li class="nav-item" th:if="${session.currentUser != null}">
                         <a class="nav-link text-white fw-semibold" th:href="@{/logout}">Logout</a>
                     </li>
                 </ul>
