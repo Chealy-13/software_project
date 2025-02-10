@@ -128,7 +128,24 @@ public class UserController {
             return "login";
         }
     }
-
+    /**
+     * Showcases the logged-in user's profile details.
+     * Only logged-in user can view the profile information.
+     *
+     * @param model   The model object to pass user details to the profile view.
+     * @param session The current HTTP session to get the logged-in user's information.
+     *                Returns the "profile" view if the user is logged in, otherwise redirects to the login page.
+     */
+    @GetMapping("/profile")
+    public String viewProfile(Model model, HttpSession session) {
+        User loggedInUser = (User) session.getAttribute("currentUser");
+        if (loggedInUser == null) {
+            model.addAttribute("errorMessage", "You need to log in to view your profile.");
+            return "login";
+        }
+        model.addAttribute("user", loggedInUser);
+        return "profile";
+    }
     /**
      * This logs out from the current user invalidating their session.
      *
