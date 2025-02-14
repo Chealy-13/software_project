@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .form-container {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+      width: 400px;
+      text-align: center;
+    }
+
+
+    label {
+      font-weight: bold;
+      color: white;
+      text-align: left;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      background-color: white;
+      color: black;
+      font-size: 16px;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: gray;
+    }
+
+    .btn-submit {
+      background-color: #e63946;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .btn-submit:hover {
+      background-color: #c62828;
+    }
+    .back-link {
+      color: #f8c471;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+  </style>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <link rel="stylesheet" href="/css/styles.css">
+
+</head>
+<body>
+<div th:replace="~{Additional/menu :: menu-bar}"></div>
+<div class="container">
+  <div class="form-container">
+    <h2 style="color: white;">Add a Car to the Marketplace</h2>
+
+    <form action="/vehicles/add" method="post">
+      <label>Make:</label>
+      <input type="text" name="make" required placeholder="Enter Make">
+
+      <label>Model:</label>
+      <input type="text" name="model" required placeholder="Enter Model">
+
+      <label>Year:</label>
+      <input type="number" name="year" required placeholder="Enter Year" min="1900" max="2155">
+
+
+      <label>Price:</label>
+      <input type="number" step="0.01" name="price" required placeholder="Enter Price">
+
+      <label>Mileage:</label>
+      <input type="number" name="mileage" required placeholder="Enter Mileage">
+
+      <label>Fuel Type:</label>
+      <select name="fuelType" required>
+        <option>Petrol</option>
+        <option>Diesel</option>
+        <option>Electric</option>
+        <option>Hybrid</option>
+      </select>
+
+      <label>Transmission:</label>
+      <select name="transmission" required>
+        <option>Manual</option>
+        <option>Automatic</option>
+      </select>
+
+      <label>Category:</label>
+      <select name="category" required>
+        <option>Saloon</option>
+        <option>SUV</option>
+        <option>Estate</option>
+        <option>Coupe</option>
+        <option>Hatchback</option>
+        <option>MPV</option>
+        <option>Van</option>
+        <option>Convertible</option>
+        <option>Pick Up</option>
+      </select>
+
+      <label>Description:</label>
+      <textarea name="description" required placeholder="Enter Description"></textarea>
+
+      <label>Location:</label>
+      <input type="text" name="location" required placeholder="Enter Location">
+
+      <button type="submit" class="btn-submit">Add Car</button>
+    </form>
+
+    <br>
+    <a href="/vehicles" class="back-link">View All Vehicles</a>
+  </div>
+</div>
+
+</body>
+</html>
