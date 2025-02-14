@@ -4,8 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-public class IndexController
-{
+public class IndexController {
     @GetMapping("/")
     public String getHome(HttpSession session, Model model) {
         String successMessage = (String) session.getAttribute("successMessage");
@@ -17,11 +16,11 @@ public class IndexController
 
         return "index";
     }
+
     @GetMapping("/index")
-        public String showIndexPage(Model model) {
+    public String showIndexPage(Model model) {
         return "index";
     }
-
 
 
     @GetMapping("/loginPage")
@@ -29,4 +28,8 @@ public class IndexController
         return "login";
     }
 
+    @GetMapping("/vehicles/add")
+    public String showAddCarForm() {
+        return "addCar";
+    }
 }
