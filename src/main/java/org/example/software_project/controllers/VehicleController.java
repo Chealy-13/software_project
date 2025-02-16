@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -37,5 +38,22 @@ public class VehicleController {
         return "allVehicles";
     }
 
+    @GetMapping("/searchVehicles")
+    public String searchVehicles(@RequestParam(required = false) String keyword,
+                                 @RequestParam(required = false) Integer minPrice,
+                                 @RequestParam(required = false) Integer maxPrice,
+                                 @RequestParam(required = false) Integer minYear,
+                                 @RequestParam(required = false) Integer maxYear,
+                                 @RequestParam(required = false) Integer mileage,
+                                 @RequestParam(required = false) String fuelType,
+                                 @RequestParam(required = false) String location,
+                                 @RequestParam(required = false) String sortBy,
+                                 Model model) {
+
+        List<Vehicle> vehicles = vehicleDao.searchVehicles(keyword, minPrice, maxPrice, minYear, maxYear, mileage, fuelType, location, sortBy);
+
+        model.addAttribute("vehicles", vehicles);
+        return "allVehicles";
+    }
 
 }

@@ -75,4 +75,94 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao{
                 rs.getString("status")
         );
     }
+
+    @Override
+    public List<Vehicle> searchVehicles(String keyword, Integer minPrice, Integer maxPrice, Integer minYear, Integer maxYear, Integer mileage, String fuelType, String location, String sortBy) {
+        List<Vehicle> vehicles = new ArrayList<>();
+        StringBuilder queryBuilder = new StringBuilder("SELECT * FROM Vehicles WHERE 1=1");
+
+        if (keyword != null && !keyword.isEmpty()) {
+            queryBuilder.append(" AND (make LIKE ? OR model LIKE ?)");
+        }
+        if (minPrice != null) {
+            queryBuilder.append(" AND price >= ?");
+        }
+        if (maxPrice != null) {
+            queryBuilder.append(" AND price <= ?");
+        }
+        if (minYear != null) {
+            queryBuilder.append(" AND year >= ?");
+        }
+        if (maxYear != null) {
+            queryBuilder.append(" AND year <= ?");
+        }
+        if (mileage != null) {
+            queryBuilder.append(" AND mileage <= ?");
+        }
+        if (fuelType != null && !fuelType.isEmpty()) {
+            queryBuilder.append(" AND fuel_type = ?");
+        }
+        if (location != null && !location.isEmpty()) {
+            queryBuilder.append(" AND location LIKE ?");
+        }
+
+        if (sortBy != null) {
+            if (sortBy.equals("price")) {
+                queryBuilder.append(" ORDER BY price");
+            } else if (sortBy.equals("year")) {
+                queryBuilder.append(" ORDER BY year");
+            } else if (sortBy.equals("newest")) {
+                queryBuilder.append(" ORDER BY created_at DESC");
+            }
+        }
+
+        String sqlQuery = queryBuilder.toString();
+
+        try (Connection conn = super.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sqlQuery)) {
+
+            int index = 1;
+
+            if (keyword != null && !keyword.isEmpty()) {
+                ps.setString(index++, "%" + keyword + "%");
+                ps.setString(index++, "%" + keyword + "%");
+            }
+            if (minPrice != null) {
+                ps.setInt(index++, minPrice);
+            }
+            if (maxPrice != null) {
+                ps.setInt(index++, maxPrice);
+            }
+            if (minYear != null) {
+                ps.setInt(index++, minYear);
+            }
+            if (maxYear != null) {
+                ps.setInt(index++, maxYear);
+            }
+            if (mileage != null) {
+                ps.setInt(index++, mileage);
+            }
+            if (fuelType != null && !fuelType.isEmpty()) {
+                ps.setString(index++, fuelType);
+            }
+            if (location != null && !location.isEmpty()) {
+                ps.setString(index++, "%" + location + "%");
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    vehicles.add(mapRowToVehicle(rs));
+                }
+            } catch (SQLException e) {
+                System.out.println("SQL Exception occurred when processing results.");
+                e.printStackTrace();
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQL Exception occurred when preparing or executing SQL.");
+            e.printStackTrace();
+        }
+
+        return vehicles;
+    }
 }
