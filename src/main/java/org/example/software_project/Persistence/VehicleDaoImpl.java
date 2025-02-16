@@ -61,7 +61,8 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao{
      */
     private Vehicle mapRowToVehicle(ResultSet rs) throws SQLException {
         return new Vehicle(
-                rs.getInt("id"),
+                rs.getLong("id"),
+                rs.getLong("seller_id"),
                 rs.getString("make"),
                 rs.getString("model"),
                 rs.getInt("year"),
