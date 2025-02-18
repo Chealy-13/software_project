@@ -91,6 +91,21 @@
         <span class="profile-label">Email:</span> <span th:text="${user.email}"></span>
     </div>
 
+    <div class="profile-field">
+        <span class="profile-label">Role:</span>
+        <span th:text="${user.role == 1 ? 'Buyer' : (user.role == 2 ? 'Seller' : 'Admin')}"></span>
+    </div>
+
+    <div class="text-center mt-3" th:if="${user.role != 3}"> <!-- Hide for Admin -->
+        <form th:action="@{/switchRole}" method="post">
+            <input type="hidden" name="userId" th:value="${user.id}" />
+            <input type="hidden" name="newRole" th:value="${user.role == 1 ? 2 : 1}" />
+            <button type="submit" class="btn btn-primary"
+                    th:text="${user.role == 1 ? 'Switch to Seller' : 'Switch to Buyer'}">
+            </button>
+        </form>
+    </div>
+
 </div>
 </body>
 </html>
