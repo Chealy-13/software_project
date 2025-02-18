@@ -7,4 +7,7 @@ public interface UserDao {
     boolean register (User user);
     User login(String username, String password);
 
+    User getUserByEmail(String email);
+
+    boolean updateUserRole(int userId, int newRole);
 }

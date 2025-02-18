@@ -49,7 +49,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
         String hashedPassword = org.mindrot.jbcrypt.BCrypt.hashpw(user.getPassword(), org.mindrot.jbcrypt.BCrypt.gensalt());
         user.setPassword(hashedPassword);
 
-        String sql = "INSERT INTO Users (username,firstName, secondName, email, password, phone, profile_picture) VALUES(?, ?, ?, ?, ?,?,?)";
+        String sql = "INSERT INTO Users (username,firstName, secondName, email, password, phone, role, profile_picture) VALUES(?, ?, ?, ?, ?,?,?,?)";
         try (Connection conn = getConnection()) {
             if (conn == null) {
                 log.error("Failed to get database connection.");
@@ -65,7 +65,8 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
                 ps.setString(4, user.getEmail()); // Email
                 ps.setString(5, user.getPassword()); // Password
                 ps.setString(6, user.getPhone()); // Phone
-                 ps.setString(7, user.getProfilePicture()); // Profile picture (nullable)
+                ps.setInt(7, user.getRole()); // role
+                 ps.setString(8, user.getProfilePicture()); // Profile picture (nullable)
 
                 int rowsAffected = ps.executeUpdate();
                 return rowsAffected > 0;
@@ -157,6 +158,67 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             }
         } catch (SQLException e) {
             log.error("Error checking for duplicate username or email: {}", e.getMessage());
+        }
+        return false;
+    }
+
+    /**
+     *retrieves a user from the database using their email.
+     *this method queries the database to find a user associated with the given email address.
+     *If found, it constructs and returns a user object with the associated data.
+     *
+     * @param email address of the user to get.
+     * @return User object if the email exists in the database, otherwise returns null.
+     */
+    @Override
+    public User getUserByEmail(String email) {
+        String sql = "SELECT * FROM Users WHERE email = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return User.builder()
+                            .id(rs.getInt("id"))
+                            .username(rs.getString("username"))
+                            .firstName(rs.getString("firstName"))
+                            .secondName(rs.getString("secondName"))
+                            .email(rs.getString("email"))
+                            .password(rs.getString("password"))
+                            .phone(rs.getString("phone"))
+                            .profilePicture(rs.getString("profile_picture"))
+                            .role(rs.getInt("role"))
+                            .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
+                            .build();
+                }
+            }
+        } catch (SQLException e) {
+            log.error("Error retrieving user by email: {}", email, e);
+        }
+        return null;
+    }
+
+    /**
+     *updates the role of a user in the database.
+     *This method chamges the role of a user based on their user ID.
+     *it makes sure that the role is updated correctly in the database.
+     *
+     * @param userId of the user whose role needs to be updated.
+     * @param newRole to assign to the user (1 = Buyer, 2 = Seller, 3 = Admin).
+     * @return true if the update was successful, false otherwise.
+     */
+    @Override
+    public boolean updateUserRole(int userId, int newRole) {
+        String sql = "UPDATE users SET role = ? WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, newRole);
+            ps.setInt(2, userId);
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            log.error("SQL error while updating role for user ID: " + userId, e);
         }
         return false;
     }
