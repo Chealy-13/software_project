@@ -24,5 +24,6 @@ public class User {
     private String phone;
     private String profilePicture;
     private LocalDateTime createdAt;
+    private int role;
 }
 
