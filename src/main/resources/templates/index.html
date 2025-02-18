@@ -27,6 +27,63 @@
     <a class="btn btn-danger btn-lg" href="/vehicles" role="button">Search</a>
 </div>
 
+<form action="/searchVehicles" method="get" class="container mt-4">
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <input type="text" name="keyword" class="form-control" placeholder="Search for a car" aria-label="Search for a car">
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <input type="number" name="minPrice" class="form-control" placeholder="Min Price" aria-label="Min Price">
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <input type="number" name="maxPrice" class="form-control" placeholder="Max Price" aria-label="Max Price">
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <input type="number" name="minYear" class="form-control" placeholder="Min Year" aria-label="Min Year">
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <input type="number" name="maxYear" class="form-control" placeholder="Max Year" aria-label="Max Year">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2 mb-3">
+            <input type="number" name="mileage" class="form-control" placeholder="Max Mileage" aria-label="Max Mileage">
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <select name="fuelType" class="form-select" aria-label="Fuel Type">
+                <option value="">Fuel Type</option>
+                <option value="Petrol">Petrol</option>
+                <option value="Diesel">Diesel</option>
+                <option value="Electric">Electric</option>
+            </select>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <input type="text" name="location" class="form-control" placeholder="Location" aria-label="Location">
+        </div>
+
+        <div class="col-md-2 mb-3">
+            <select name="sortBy" class="form-select" aria-label="Sort By">
+                <option value="price">Sort by Price</option>
+                <option value="year">Sort by Year</option>
+                <option value="newest">Sort by Newest</option>
+            </select>
+        </div>
+
+        <div class="col-md-1 mb-3">
+            <button type="submit" class="btn btn-danger w-100">Search</button>
+        </div>
+    </div>
+</form>
+
+
+
 <footer class="text-center mt-5">
     <p>&copy; 2025 Car MarketPlace. All Rights Reserved.</p>
     <p>&copy; Background image, AI generated.</p>
