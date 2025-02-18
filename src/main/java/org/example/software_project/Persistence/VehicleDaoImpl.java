@@ -3,15 +3,50 @@ package org.example.software_project.Persistence;
 import org.example.software_project.business.Vehicle;
 import org.springframework.stereotype.Component;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class VehicleDaoImpl extends MySQLDao implements VehicleDao{
+public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
+    /**
+     * Saves a new vehicle listing to the database.
+     *
+     * @param vehicle The vehicle object containing details to be stored.
+     */
+
+    @Override
+    public void saveVehicle(Vehicle vehicle) {
+        String sql = "INSERT INTO Vehicles (seller_id, make, model, year, price, mileage, fuel_type, transmission, category, description, location, status) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Connection conn = super.getConnection();
+        try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setLong(1, vehicle.getSellerId());
+            ps.setString(2, vehicle.getMake());
+            ps.setString(3, vehicle.getModel());
+            ps.setInt(4, vehicle.getYear());
+            ps.setDouble(5, vehicle.getPrice());
+            ps.setInt(6, vehicle.getMileage());
+            ps.setString(7, vehicle.getFuelType());
+            ps.setString(8, vehicle.getTransmission());
+            ps.setString(9, vehicle.getCategory());
+            ps.setString(10, vehicle.getDescription());
+            ps.setString(11, vehicle.getLocation());
+            ps.setString(12, "Available");
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        vehicle.setId(generatedKeys.getLong(1));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            super.freeConnection(conn);
+        }
+    }
 
     /**
      * Gets a list of all vehicles stored in the database.
@@ -22,7 +57,7 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao{
      * Returns an empty list if no vehicles are found.
      */
     @Override
-    public List<Vehicle> getAllVehicles(){
+    public List<Vehicle> getAllVehicles() {
         // Create variable to hold the customer info from the database
         List<Vehicle> vehicles = new ArrayList<>();
         // Get a connection using the superclass
@@ -51,6 +86,13 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao{
 
         return vehicles;
     }
+
+    /**
+     * Saves a new vehicle listing to the database.
+     *
+     * @param vehicle The vehicle object containing details to be stored.
+     */
+
 
     /**
      * Maps a row from the ResultSet to a Vehicle object.
