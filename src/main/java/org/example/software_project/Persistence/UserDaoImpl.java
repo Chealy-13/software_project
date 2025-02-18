@@ -163,6 +163,41 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
     }
 
     /**
+     *Retrieves a user from the database using their user id.
+     *this method queries the database to find a user associated with the given user id.
+     *If found, it constructs and returns a user object with the associated data.
+     * @param userId of the user to get.
+     * @return User object if the user id exists in te database, otherwise returns null.
+     */
+    @Override
+    public User getUserById(int userId) {
+        String sql = "SELECT * FROM users WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return User.builder()
+                            .id(rs.getInt("id"))
+                            .username(rs.getString("username"))
+                            .firstName(rs.getString("firstName"))
+                            .secondName(rs.getString("secondName"))
+                            .email(rs.getString("email"))
+                            .password(rs.getString("password"))
+                            .phone(rs.getString("phone"))
+                            .role(rs.getInt("role"))
+                            .profilePicture(rs.getString("profile_picture"))
+                            .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
+                            .build();
+                }
+            }
+        } catch (SQLException e) {
+            log.error("SQL error while retrieving user ID: " + userId, e);
+        }
+        return null;
+    }
+
+    /**
      *retrieves a user from the database using their email.
      *this method queries the database to find a user associated with the given email address.
      *If found, it constructs and returns a user object with the associated data.
