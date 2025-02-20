@@ -21,6 +21,7 @@ public class Vehicle {
     private String description;
     private String location;
     private String status;
+    private String image_url;
 
 
     }
