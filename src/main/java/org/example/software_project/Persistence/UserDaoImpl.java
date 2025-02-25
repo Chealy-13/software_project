@@ -120,6 +120,9 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
                     String hashedPassword = rs.getString("password");
 
                      if (org.mindrot.jbcrypt.BCrypt.checkpw(password, hashedPassword)) {
+                         int userRole = rs.getInt("role");
+                         log.debug("Login successful for {} with Role={}", username, userRole);
+
                          return User.builder()
                                 .id(rs.getInt("id"))
                                 .username(rs.getString("username"))
@@ -129,7 +132,8 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
                                 .password(rs.getString("password")) 
                                 .phone(rs.getString("phone"))
                                 .profilePicture(rs.getString("profile_picture"))
-                                .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
+                                 .role(userRole)
+                                 .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
                                 .build();
                     } else {
                         log.warn("Invalid login attempt for username: {}", username);

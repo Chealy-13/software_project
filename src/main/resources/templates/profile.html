@@ -93,7 +93,7 @@
 
     <div class="profile-field">
         <span class="profile-label">Role:</span>
-        <span th:text="${user.role == 1 ? 'Buyer' : (user.role == 2 ? 'Seller' : 'Admin')}"></span>
+        <span th:text="${user.role == 1 ? 'Buyer' : (user.role == 2 ? 'Seller' : (user.role == 3 ? 'Admin' : 'Unknown'))}"></span>
     </div>
 
     <div class="text-center mt-3" th:if="${user.role != 3}"> <!-- Hide for Admin -->
