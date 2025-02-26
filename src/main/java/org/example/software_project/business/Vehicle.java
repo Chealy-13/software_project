@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,7 +23,7 @@ public class Vehicle {
     private String description;
     private String location;
     private String status;
-    private String image_url;
+    private List<String> image_url;
 
 
     }
