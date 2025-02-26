@@ -102,6 +102,8 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
      * @throws SQLException If an SQL error occurs while retrieving values from the result set.
      */
     private Vehicle mapRowToVehicle(ResultSet rs) throws SQLException {
+        List<String> image_url = new ArrayList<>(getVehicleImages(rs.getLong("id")));
+
         return new Vehicle(
                 rs.getLong("id"),
                 rs.getLong("seller_id"),
@@ -116,7 +118,8 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
                 rs.getString("description"),
                 rs.getString("location"),
                 rs.getString("status"),
-                rs.getString("image_url")
+                image_url
+
         );
     }
 
@@ -209,4 +212,57 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
 
         return vehicles;
     }
+
+    @Override
+    public List<Vehicle> getAllVehiclesWithImages() {
+        List<Vehicle> vehicles = new ArrayList<>();
+        Connection conn = super.getConnection();
+
+        String sql = "SELECT * FROM Vehicles";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Vehicle vehicle = mapRowToVehicle(rs);
+
+                vehicle.setImage_url(getVehicleImages(vehicle.getId()));
+
+                vehicles.add(vehicle);
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Exception occurred when executing SQL or processing results.");
+            e.printStackTrace();
+        } finally {
+            super.freeConnection(conn);
+        }
+
+        return vehicles;
+    }
+
+    private List<String> getVehicleImages(Long vehicleId) {
+        List<String> imageUrls = new ArrayList<>();
+        Connection conn = super.getConnection();
+
+        String sql = "SELECT image_url FROM vehicleimages WHERE vehicle_id = ?";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, vehicleId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    imageUrls.add(rs.getString("image_url"));
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Exception occurred while fetching vehicle images.");
+            e.printStackTrace();
+        } finally {
+            super.freeConnection(conn);
+        }
+
+        return imageUrls;
+    }
+
+
 }

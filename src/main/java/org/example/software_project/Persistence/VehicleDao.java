@@ -11,4 +11,6 @@ public interface VehicleDao {
     List<Vehicle> getAllVehicles();
 
     List<Vehicle> searchVehicles(String keyword, Integer minPrice, Integer maxPrice, Integer minYear, Integer maxYear, Integer mileage, String fuelType, String location, String sortBy);
+
+    List<Vehicle> getAllVehiclesWithImages();
 }
