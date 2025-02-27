@@ -3,23 +3,32 @@ package org.example.software_project.controllers;
 import jakarta.servlet.http.HttpSession;
 import org.example.software_project.Persistence.UserDao;
 import org.example.software_project.Persistence.UserDaoImpl;
+import org.example.software_project.Persistence.VehicleDao;
+import org.example.software_project.Persistence.VehicleDaoImpl;
 import org.example.software_project.business.User;
+import org.example.software_project.business.Vehicle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     private final UserDao userDao;
+    private final VehicleDao vehicleDao;
 
-    public UserController() {
-        this.userDao = new UserDaoImpl("database.properties");
+    @Autowired
+    public UserController(UserDao userDao, VehicleDao vehicleDao) {
+        this.userDao = userDao;
+        this.vehicleDao = vehicleDao;
     }
 
 
@@ -221,6 +230,30 @@ public class UserController {
             log.error("Failed to update user role!");
             return "redirect:/profile?error=UpdateFailed";
         }
+    }
+
+    /**
+     * Displays the seller's vehicle listings.
+     * this method retrieves and displays all vehicles listed by the currently logged-in seller.
+     * If the user is not authenticated or is not a seller, they are redirected to the login page.
+     *
+     * @param model object used to pass the seller's listings to the view.
+     * @param session object to retrieve the currently logged-in user.
+     * @return The name of the Thymeleaf template (`"sellerListings"`) that displays the seller's vehicles.
+     * If the user is not logged in or is not a seller, redirects to the login page.
+     */
+    @GetMapping("/vehicles/myListings")
+    public String viewMyListings(Model model, HttpSession session) {
+        User currentUser = (User) session.getAttribute("currentUser");
+
+        if (currentUser == null || currentUser.getRole() != 2) {
+            return "redirect:/loginPage";
+        }
+
+        List<Vehicle> myListings = vehicleDao.getVehiclesBySeller(currentUser.getId());
+        model.addAttribute("myListings", myListings);
+
+        return "sellerListings";
     }
 
 
