@@ -96,11 +96,23 @@
         <span th:text="${user.role == 1 ? 'Buyer' : (user.role == 2 ? 'Seller' : (user.role == 3 ? 'Admin' : 'Unknown'))}"></span>
     </div>
 
-    <div class="text-center mt-3" th:if="${user.role != 3}"> <!-- Hide for Admin -->
+    <div class="text-center mt-3">
+        <!-- Show buyers actions -->
+        <div th:if="${user.role == 1}">
+            <a href="/vehicles" class="btn btn-info">Browse Available Cars</a>
+        </div>
+
+        <!-- Show sellers actions -->
+        <div th:if="${user.role == 2}">
+            <a href="/vehicles/myListings" class="btn btn-success">View My Listings</a>
+            <a href="/vehicles/add" class="btn btn-primary">Post a New Car</a>
+        </div>
+
+        <!-- Switch Role Button -->
         <form th:action="@{/switchRole}" method="post">
             <input type="hidden" name="userId" th:value="${user.id}" />
             <input type="hidden" name="newRole" th:value="${user.role == 1 ? 2 : 1}" />
-            <button type="submit" class="btn btn-primary"
+            <button type="submit" class="btn btn-warning mt-2"
                     th:text="${user.role == 1 ? 'Switch to Seller' : 'Switch to Buyer'}">
             </button>
         </form>

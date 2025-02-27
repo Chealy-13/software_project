@@ -23,10 +23,18 @@
     <h1 class="display-4 fw-bold text-dark">Welcome to the Car Marketplace!</h1>
     <p class="lead text-muted">This is the place to sell or buy your dream car.</p>
     <hr class="my-4">
-<!--    <div class="container bg-white p-3 rounded-4 shadow-sm w-50 mx-auto border border-light">-->
-<!--    <p>Press the button below to search for vehicles!</p>-->
-    <a class="btn btn-danger btn-lg" href="/vehicles" role="button">Search Cars Now</a>
-<!--    </div>-->
+
+    <!-- Show search button only for buyers -->
+    <a class="btn btn-danger btn-lg" href="/vehicles" role="button"
+       th:if="${session.currentUser == null or session.currentUser.role == 1}">
+        Search Cars Now
+    </a>
+
+    <!-- Show add car button only for sellers -->
+    <a class="btn btn-success btn-lg" href="/vehicles/add" role="button"
+       th:if="${session.currentUser != null and session.currentUser.role == 2}">
+        Add a Car
+    </a>
 </div>
 
 <br><br>

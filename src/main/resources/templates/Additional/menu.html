@@ -13,23 +13,36 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link text-white fw-semibold" th:href="@{/}">Home</a>
                     </li>
+
+                    <!--show only login and reg if no user logged in-->
                     <li class="nav-item" th:if="${session.currentUser == null}">
                         <a class="nav-link text-white fw-semibold" th:href="@{/loginPage}">Login</a>
                     </li>
                     <li class="nav-item" th:if="${session.currentUser == null}">
                         <a class="nav-link text-white fw-semibold" th:href="@{/registerPage}">Register</a>
                     </li>
+
+                    <!--show profile if logged in-->
                     <li class="nav-item" th:if="${session.currentUser != null}">
                         <a class="nav-link text-white fw-semibold" th:href="@{/profile}">Profile</a>
                     </li>
-                    <li class="nav-item" th:if="${session.currentUser != null}">
+                    <!--if seller logged in-->
+                    <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.role == 2}">
                         <a class="nav-link text-white fw-semibold" th:href="@{/vehicles/add}">Add Car</a>
+                        <a class="nav-link text-white fw-semibold" th:href="@{/vehicles/myListings}">My Listings</a>
                     </li>
+                    <!--if buyer logged in-->
+                    <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.role == 1}">
+                        <a class="nav-link text-white fw-semibold" th:href="@{/vehicles}">Search Cars</a>
+                    </li>
+
+                    <!--logout-->
                     <li class="nav-item" th:if="${session.currentUser != null}">
                         <a class="nav-link text-white fw-semibold" th:href="@{/logout}">Logout</a>
                     </li>
