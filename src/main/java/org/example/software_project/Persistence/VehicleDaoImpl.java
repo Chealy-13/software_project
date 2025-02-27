@@ -1,20 +1,28 @@
 package org.example.software_project.Persistence;
 
 import org.example.software_project.business.Vehicle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
+
+    public VehicleDaoImpl() {
+        super();
+    }
+    public VehicleDaoImpl(String propertiesFilename) {
+        super(propertiesFilename);
+    }
     /**
      * Saves a new vehicle listing to the database.
      *
      * @param vehicle The vehicle object containing details to be stored.
      */
-
     @Override
     public void saveVehicle(Vehicle vehicle) {
         String sql = "INSERT INTO Vehicles (seller_id, make, model, year, price, mileage, fuel_type, transmission, category, description, location, status) " +
@@ -209,4 +217,49 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
 
         return vehicles;
     }
+
+    /**
+     * Retrieves a list of vehicles listed by a specific seller.
+     * it queries the database to fetch all vehicles where the `seller_id`
+     * matches the provided seller's ID. Each vehicle is mapped from the result set
+     * into a `Vehicle` object and added to the list.
+     * @param sellerId The ID of the seller whose vehicles are being retrieved.
+     * @return A list of `Vehicle` objects associated with the specified seller.
+     * If no vehicles are found, returns an empty list.
+     */
+    @Override
+    public List<Vehicle> getVehiclesBySeller(int sellerId) {
+        List<Vehicle> vehicles = new ArrayList<>();
+        String sql = "SELECT * FROM vehicles WHERE seller_id = ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, sellerId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Vehicle vehicle = new Vehicle(
+                            rs.getLong("id"),
+                            rs.getLong("seller_id"),
+                            rs.getString("make"),
+                            rs.getString("model"),
+                            rs.getInt("year"),
+                            rs.getDouble("price"),
+                            rs.getInt("mileage"),
+                            rs.getString("fuel_type"),
+                            rs.getString("transmission"),
+                            rs.getString("category"),
+                            rs.getString("description"),
+                            rs.getString("location"),
+                            rs.getString("status"),
+                            rs.getString("image_url")
+                    );
+                    vehicles.add(vehicle);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return vehicles;
+    }
+
 }
