@@ -2,11 +2,14 @@ package org.example.software_project.Persistence;
 
 import lombok.extern.slf4j.Slf4j;
 import org.example.software_project.business.User;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 
 import java.sql.*;
 
 @Slf4j
+@Component
 public class UserDaoImpl extends MySQLDao implements UserDao {
 
     public UserDaoImpl() {
