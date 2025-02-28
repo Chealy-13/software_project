@@ -2,6 +2,8 @@ package org.example.software_project.business;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Data
@@ -21,7 +23,7 @@ public class Vehicle {
     private String description;
     private String location;
     private String status;
-    private String image_url;
+    private List<String> image_url;
 
 
     }

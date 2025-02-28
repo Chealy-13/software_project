@@ -14,126 +14,150 @@
 
 <form action="/searchVehicles" method="get" class="container mt-4">
     <div class="container bg-white p-4 rounded-4 shadow-sm border">
-    <div class="row">
-        <div class="col-md-4 mb-3">
-            <input type="text" name="keyword" class="form-control" placeholder="Search for a car" aria-label="Search for a car">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <input type="text" name="keyword" class="form-control" placeholder="Search for a car"
+                       aria-label="Search for a car">
+            </div>
+
+            <div class="col-md-2 mb-3">
+                <select name="minPrice" class="form-select" aria-label="Min Price">
+                    <option value="">Min Price</option>
+                    <option value="1000">€1,000</option>
+                    <option value="5000">€5,000</option>
+                    <option value="10000">€10,000</option>
+                    <option value="20000">€20,000</option>
+                    <option value="30000">€30,000</option>
+                    <option value="50000">€50,000</option>
+                </select>
+            </div>
+
+            <div class="col-md-2 mb-3">
+                <select name="maxPrice" class="form-select" aria-label="Max Price">
+                    <option value="">Max Price</option>
+                    <option value="10000">€10,000</option>
+                    <option value="20000">€20,000</option>
+                    <option value="30000">€30,000</option>
+                    <option value="40000">€40,000</option>
+                    <option value="50000">€50,000</option>
+                    <option value="100000">€100,000</option>
+                </select>
+            </div>
+
+            <div class="col-md-2 mb-3">
+                <select name="minYear" class="form-select" aria-label="Min Year">
+                    <option value="">Min Year</option>
+                    <option value="2015">2015</option>
+                    <option value="2016">2016</option>
+                    <option value="2017">2017</option>
+                    <option value="2018">2018</option>
+                    <option value="2019">2019</option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                </select>
+            </div>
+
+            <div class="col-md-2 mb-3">
+                <select name="maxYear" class="form-select" aria-label="Max Year">
+                    <option value="">Max Year</option>
+                    <option value="2015">2015</option>
+                    <option value="2016">2016</option>
+                    <option value="2017">2017</option>
+                    <option value="2018">2018</option>
+                    <option value="2019">2019</option>
+                    <option value="2020">2020</option>
+                    <option value="2021">2021</option>
+                    <option value="2022">2022</option>
+                </select>
+            </div>
         </div>
 
-        <div class="col-md-2 mb-3">
-            <select name="minPrice" class="form-select" aria-label="Min Price">
-                <option value="">Min Price</option>
-                <option value="1000">€1,000</option>
-                <option value="5000">€5,000</option>
-                <option value="10000">€10,000</option>
-                <option value="20000">€20,000</option>
-                <option value="30000">€30,000</option>
-                <option value="50000">€50,000</option>
-            </select>
-        </div>
+        <div class="row">
+            <div class="col-md-2 mb-3">
+                <select name="mileage" class="form-select" aria-label="Max Mileage">
+                    <option value="">Max Mileage</option>
+                    <option value="20000">20,000 km</option>
+                    <option value="40000">40,000 km</option>
+                    <option value="60000">60,000 km</option>
+                    <option value="80000">80,000 km</option>
+                    <option value="100000">100,000 km</option>
+                </select>
+            </div>
 
-        <div class="col-md-2 mb-3">
-            <select name="maxPrice" class="form-select" aria-label="Max Price">
-                <option value="">Max Price</option>
-                <option value="10000">€10,000</option>
-                <option value="20000">€20,000</option>
-                <option value="30000">€30,000</option>
-                <option value="40000">€40,000</option>
-                <option value="50000">€50,000</option>
-                <option value="100000">€100,000</option>
-            </select>
-        </div>
+            <div class="col-md-2 mb-3">
+                <select name="fuelType" class="form-select" aria-label="Fuel Type">
+                    <option value="">Fuel Type</option>
+                    <option value="Petrol">Petrol</option>
+                    <option value="Diesel">Diesel</option>
+                    <option value="Electric">Electric</option>
+                </select>
+            </div>
 
-        <div class="col-md-2 mb-3">
-            <select name="minYear" class="form-select" aria-label="Min Year">
-                <option value="">Min Year</option>
-                <option value="2015">2015</option>
-                <option value="2016">2016</option>
-                <option value="2017">2017</option>
-                <option value="2018">2018</option>
-                <option value="2019">2019</option>
-                <option value="2020">2020</option>
-                <option value="2021">2021</option>
-                <option value="2022">2022</option>
-            </select>
-        </div>
+            <div class="col-md-3 mb-3">
+                <select name="location" class="form-select" aria-label="Location">
+                    <option value="">Location</option>
+                    <option value="Dublin">Dublin</option>
+                    <option value="Cork">Cork</option>
+                    <option value="Limerick">Limerick</option>
+                    <option value="Galway">Galway</option>
+                    <option value="Belfast">Belfast</option>
+                </select>
+            </div>
 
-        <div class="col-md-2 mb-3">
-            <select name="maxYear" class="form-select" aria-label="Max Year">
-                <option value="">Max Year</option>
-                <option value="2015">2015</option>
-                <option value="2016">2016</option>
-                <option value="2017">2017</option>
-                <option value="2018">2018</option>
-                <option value="2019">2019</option>
-                <option value="2020">2020</option>
-                <option value="2021">2021</option>
-                <option value="2022">2022</option>
-            </select>
-        </div>
-    </div>
+            <div class="col-md-2 mb-3">
+                <select name="sortBy" class="form-select" aria-label="Sort By">
+                    <option value="price">Sort by Price</option>
+                    <option value="year">Sort by Year</option>
+                    <option value="newest">Sort by Newest</option>
+                </select>
+            </div>
 
-    <div class="row">
-        <div class="col-md-2 mb-3">
-            <select name="mileage" class="form-select" aria-label="Max Mileage">
-                <option value="">Max Mileage</option>
-                <option value="20000">20,000 km</option>
-                <option value="40000">40,000 km</option>
-                <option value="60000">60,000 km</option>
-                <option value="80000">80,000 km</option>
-                <option value="100000">100,000 km</option>
-            </select>
+            <div class="col-md-1 mb-3">
+                <button type="submit" class="btn btn-danger w-100">Search</button>
+            </div>
         </div>
-
-        <div class="col-md-2 mb-3">
-            <select name="fuelType" class="form-select" aria-label="Fuel Type">
-                <option value="">Fuel Type</option>
-                <option value="Petrol">Petrol</option>
-                <option value="Diesel">Diesel</option>
-                <option value="Electric">Electric</option>
-            </select>
-        </div>
-
-        <div class="col-md-3 mb-3">
-            <select name="location" class="form-select" aria-label="Location">
-                <option value="">Location</option>
-                <option value="Dublin">Dublin</option>
-                <option value="Cork">Cork</option>
-                <option value="Limerick">Limerick</option>
-                <option value="Galway">Galway</option>
-                <option value="Belfast">Belfast</option>
-            </select>
-        </div>
-
-        <div class="col-md-2 mb-3">
-            <select name="sortBy" class="form-select" aria-label="Sort By">
-                <option value="price">Sort by Price</option>
-                <option value="year">Sort by Year</option>
-                <option value="newest">Sort by Newest</option>
-            </select>
-        </div>
-
-        <div class="col-md-1 mb-3">
-            <button type="submit" class="btn btn-danger w-100">Search</button>
-        </div>
-    </div>
     </div>
 </form>
 
 <div class="container mt-5">
-<!--    <h2 class="text-center">Available Vehicles</h2>-->
+    <!--    <h2 class="text-center">Available Vehicles</h2>-->
     <div class="row">
         <div class="col-md-4 mb-4" th:each="vehicle : ${vehicles}">
             <div class="card shadow-sm h-100">
-                <img th:src="@{${vehicle.image_url}}" class="card-img-top" alt="Vehicle Image">
+                <div th:id="'carousel-vehicle-' + ${vehicle.id}" class="carousel slide" data-bs-interval="false">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img th:src="@{${vehicle.image_url[0]}}" class="d-block w-100" alt="Vehicle Image">
+                        </div>
+                        <div class="carousel-item" th:each="img, iter : ${vehicle.image_url}" th:if="${iter.index > 0}">
+                            <img th:src="@{${img}}" class="d-block w-100" alt="Vehicle Image">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button"
+                            th:data-bs-target="'#carousel-vehicle-' + ${vehicle.id}" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button"
+                            th:data-bs-target="'#carousel-vehicle-' + ${vehicle.id}" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
                 <div class="card-body">
                     <h5 class="card-title" th:text="${vehicle.make} + ' ' + ${vehicle.model}"></h5>
-                    <h6 class="card-subtitle mb-2 text-muted" th:text="${vehicle.year} + ' | ' + ${vehicle.category}"></h6>
+                    <h6 class="card-subtitle mb-2 text-muted"
+                        th:text="${vehicle.year} + ' | ' + ${vehicle.category}"></h6>
                     <p class="card-text"><strong>Price:</strong> €<span th:text="${vehicle.price}"></span></p>
-                    <p class="card-text"><strong>Mileage:</strong> <span th:text="${vehicle.mileage} + ' km'"></span></p>
+                    <p class="card-text"><strong>Mileage:</strong> <span th:text="${vehicle.mileage} + ' km'"></span>
+                    </p>
                     <p class="card-text"><strong>Fuel Type:</strong> <span th:text="${vehicle.fuelType}"></span></p>
-                    <p class="card-text"><strong>Transmission:</strong> <span th:text="${vehicle.transmission}"></span></p>
+                    <p class="card-text"><strong>Transmission:</strong> <span th:text="${vehicle.transmission}"></span>
+                    </p>
                     <p class="card-text"><strong>Location:</strong> <span th:text="${vehicle.location}"></span></p>
-                    <p class="card-text"><strong>Description:</strong> <span th:text="${vehicle.description}"></span></p>
+                    <p class="card-text"><strong>Description:</strong> <span th:text="${vehicle.description}"></span>
+                    </p>
                     <p class="text-success fw-bold" th:if="${vehicle.status == 'Available'}">Available</p>
                     <p class="text-danger fw-bold" th:if="${vehicle.status == 'Sold'}">Sold</p>
 
@@ -146,11 +170,10 @@
 </div>
 
 
-
 <footer class="navbar navbar-dark bg-dark shadow-lg text-center mt-5">
     <div class="container p-3 text-white">
-    <p>&copy; 2025 Car MarketPlace. All Rights Reserved.</p>
-        </div>
+        <p>&copy; 2025 Car MarketPlace. All Rights Reserved.</p>
+    </div>
 </footer>
 
 </body>
