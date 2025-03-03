@@ -240,6 +240,9 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
             ps.setInt(1, sellerId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
+                    //get list of images for the vehicle
+                    List<String> images = getVehicleImages(rs.getLong("id"));
+
                     Vehicle vehicle = new Vehicle(
                             rs.getLong("id"),
                             rs.getLong("seller_id"),
@@ -254,7 +257,7 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
                             rs.getString("description"),
                             rs.getString("location"),
                             rs.getString("status"),
-                            rs.getString("image_url")
+                            images
                     );
                     vehicles.add(vehicle);
                 }
@@ -315,6 +318,7 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
 
         return imageUrls;
     }
+
 
 
 }
