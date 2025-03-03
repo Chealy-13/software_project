@@ -128,7 +128,9 @@
                 <div th:id="'carousel-vehicle-' + ${vehicle.id}" class="carousel slide" data-bs-interval="false">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img th:src="@{${vehicle.image_url[0]}}" class="d-block w-100" alt="Vehicle Image">
+                            <th:block th:if="${vehicle.image_url != null and vehicle.image_url.size() > 0}">
+                                <img th:src="@{${vehicle.image_url[0]}}" class="d-block w-100" alt="Vehicle Image">
+                            </th:block>
                         </div>
                         <div class="carousel-item" th:each="img, iter : ${vehicle.image_url}" th:if="${iter.index > 0}">
                             <img th:src="@{${img}}" class="d-block w-100" alt="Vehicle Image">
