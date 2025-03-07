@@ -164,6 +164,12 @@
                     <p class="text-danger fw-bold" th:if="${vehicle.status == 'Sold'}">Sold</p>
 
                     <a href="/sendEmail/{vehicle.id}" class="btn btn-danger w-100 mt-3">Message Seller</a>
+                    <br>
+                    <form action="/favorites/add" method="post">
+                        <input type="hidden" name="vehicleId" th:value="${vehicle.id}" />
+                        <button type="submit" class="btn btn-outline-danger w-100 mt-2">Add to Favorites</button>
+                    </form>
+
 
                 </div>
             </div>
