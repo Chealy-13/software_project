@@ -32,6 +32,10 @@
                     <li class="nav-item" th:if="${session.currentUser != null}">
                         <a class="nav-link text-white fw-semibold" th:href="@{/profile}">Profile</a>
                     </li>
+                    <!-- show favorites if logged in -->
+                    <li class="nav-item" th:if="${session.currentUser != null}">
+                        <a class="nav-link text-white fw-semibold" th:href="@{/favorites}">Favorites</a>
+                    </li>
                     <!--if seller logged in-->
                     <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.role == 2}">
                         <a class="nav-link text-white fw-semibold" th:href="@{/vehicles/add}">Add Car</a>
