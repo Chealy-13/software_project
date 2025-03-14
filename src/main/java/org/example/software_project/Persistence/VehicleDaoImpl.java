@@ -1,10 +1,8 @@
 package org.example.software_project.Persistence;
 
 import org.example.software_project.business.Vehicle;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +22,10 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
      * @param vehicle The vehicle object containing details to be stored.
      */
     @Override
-    public void saveVehicle(Vehicle vehicle) {
-        String sql = "INSERT INTO Vehicles (seller_id, make, model, year, price, mileage, fuel_type, transmission, category, description, location, status) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public void saveVehicle(Vehicle vehicle, String fileName) {
+        String sql = "INSERT INTO Vehicles (seller_id, make, model, year, price, mileage, fuel_type, transmission, category, description, location, status, image_url) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         Connection conn = super.getConnection();
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setLong(1, vehicle.getSellerId());
@@ -41,6 +40,10 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
             ps.setString(10, vehicle.getDescription());
             ps.setString(11, vehicle.getLocation());
             ps.setString(12, "Available");
+
+            String imageUrl = (fileName != null && !fileName.isEmpty()) ? "/images/" + fileName : null;
+            ps.setString(13, imageUrl);
+
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
                 try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
@@ -55,6 +58,7 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
             super.freeConnection(conn);
         }
     }
+
 
     /**
      * Gets a list of all vehicles stored in the database.
@@ -110,7 +114,7 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
      * @throws SQLException If an SQL error occurs while retrieving values from the result set.
      */
     private Vehicle mapRowToVehicle(ResultSet rs) throws SQLException {
-        List<String> image_url = new ArrayList<>(getVehicleImages(rs.getLong("id")));
+        List<String> images = getVehicleImages(rs.getLong("id"));
 
         return new Vehicle(
                 rs.getLong("id"),
@@ -126,10 +130,11 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
                 rs.getString("description"),
                 rs.getString("location"),
                 rs.getString("status"),
-                image_url
-
+                images,
+                images.isEmpty() ? null : images.get(0)
         );
     }
+
 
     @Override
     public List<Vehicle> searchVehicles(String keyword, Integer minPrice, Integer maxPrice, Integer minYear, Integer maxYear, Integer mileage, String fuelType, String location, String sortBy) {
@@ -240,7 +245,6 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
             ps.setInt(1, sellerId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    //get list of images for the vehicle
                     List<String> images = getVehicleImages(rs.getLong("id"));
 
                     Vehicle vehicle = new Vehicle(
@@ -257,8 +261,10 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
                             rs.getString("description"),
                             rs.getString("location"),
                             rs.getString("status"),
-                            images
+                            images, // List of image URLs
+                            images.isEmpty() ? null : images.get(0)
                     );
+
                     vehicles.add(vehicle);
                 }
             }

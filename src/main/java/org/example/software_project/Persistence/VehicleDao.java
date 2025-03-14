@@ -6,7 +6,8 @@ import java.util.List;
 
 public interface VehicleDao {
 
-    void saveVehicle(Vehicle vehicle);
+
+    void saveVehicle(Vehicle vehicle, String fileName);
 
     List<Vehicle> getAllVehicles();
 

@@ -77,6 +77,8 @@ public class FavoriteDaoImpl extends MySQLDao implements FavoriteDao{
     }
 
     private Vehicle mapRowToVehicle(ResultSet rs) throws SQLException {
+        List<String> images = getVehicleImages(rs.getLong("id"));
+
         return new Vehicle(
                 rs.getLong("id"),
                 rs.getLong("seller_id"),
@@ -91,9 +93,11 @@ public class FavoriteDaoImpl extends MySQLDao implements FavoriteDao{
                 rs.getString("description"),
                 rs.getString("location"),
                 rs.getString("status"),
-                getVehicleImages(rs.getLong("id"))
+                images,
+                images.isEmpty() ? null : images.get(0)
         );
     }
+
 
     private List<String> getVehicleImages(Long vehicleId) {
         List<String> imageUrls = new ArrayList<>();
