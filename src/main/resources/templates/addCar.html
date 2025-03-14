@@ -83,7 +83,7 @@
   <div class="form-container">
     <h2 style="color: white;">Add a Car to the Marketplace</h2>
 
-    <form action="/vehicles/add" method="post">
+    <form action="/vehicles/add" method="post" enctype="multipart/form-data">
       <label>Make:</label>
       <select name="make" required>
         <option value="">-- Select Make --</option>
@@ -165,6 +165,9 @@
 
       <label>Location:</label>
       <input type="text" name="location" required placeholder="Enter Location">
+
+      <label>Upload Car Image:</label>
+      <input type="file" name="imageFile" accept="image/*" required>
 
       <button type="submit" class="btn-submit">Add Car</button>
     </form>
