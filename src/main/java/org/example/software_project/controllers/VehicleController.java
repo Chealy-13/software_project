@@ -97,4 +97,19 @@ public class VehicleController {
         return "allVehicles";
     }
 
+
+    @GetMapping("/sellerListings")
+    public String showSellerListings(Model model, HttpSession session) {
+        User seller = (User) session.getAttribute("currentUser");
+        if (seller == null) {
+            return "redirect:/loginPage";
+        }
+
+        List<Vehicle> myListings = vehicleDao.getVehiclesBySeller(seller.getId());
+        model.addAttribute("myListings", myListings);
+        return "sellerListings"; // your Thymeleaf template
+    }
+
+
+
 }
