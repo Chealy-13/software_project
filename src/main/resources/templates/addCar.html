@@ -83,9 +83,42 @@
   <div class="form-container">
     <h2 style="color: white;">Add a Car to the Marketplace</h2>
 
-    <form action="/vehicles/add" method="post">
+    <form action="/vehicles/add" method="post" enctype="multipart/form-data">
       <label>Make:</label>
-      <input type="text" name="make" required placeholder="Enter Make">
+      <select name="make" required>
+        <option value="">-- Select Make --</option>
+        <option value="Alfa Romeo">Alfa Romeo</option>
+        <option value="Audi">Audi</option>
+        <option value="BMW">BMW</option>
+        <option value="Chevrolet">Chevrolet</option>
+        <option value="Citroën">Citroën</option>
+        <option value="Dodge">Dodge</option>
+        <option value="Fiat">Fiat</option>
+        <option value="Ford">Ford</option>
+        <option value="Genesis">Genesis</option>
+        <option value="Honda">Honda</option>
+        <option value="Hyundai">Hyundai</option>
+        <option value="Jaguar">Jaguar</option>
+        <option value="Jeep">Jeep</option>
+        <option value="Kia">Kia</option>
+        <option value="Land Rover">Land Rover</option>
+        <option value="Lexus">Lexus</option>
+        <option value="Maserati">Maserati</option>
+        <option value="Mazda">Mazda</option>
+        <option value="Mercedes-Benz">Mercedes-Benz</option>
+        <option value="Mini">Mini</option>
+        <option value="Mitsubishi">Mitsubishi</option>
+        <option value="Nissan">Nissan</option>
+        <option value="Opel">Opel</option>
+        <option value="Peugeot">Peugeot</option>
+        <option value="Porsche">Porsche</option>
+        <option value="Renault">Renault</option>
+        <option value="Subaru">Subaru</option>
+        <option value="Tesla">Tesla</option>
+        <option value="Toyota">Toyota</option>
+        <option value="Volkswagen">Volkswagen</option>
+        <option value="Volvo">Volvo</option>
+      </select>
 
       <label>Model:</label>
       <input type="text" name="model" required placeholder="Enter Model">
@@ -132,6 +165,9 @@
 
       <label>Location:</label>
       <input type="text" name="location" required placeholder="Enter Location">
+
+      <label>Upload Car Image:</label>
+      <input type="file" name="imageFile" accept="image/*" required>
 
       <button type="submit" class="btn-submit">Add Car</button>
     </form>
