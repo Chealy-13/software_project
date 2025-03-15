@@ -90,7 +90,7 @@ class VehicleDaoImplTest {
         vehicle.setFuelType("Petrol");
         vehicle.setTransmission("Automatic");
         vehicle.setCategory("Sedan");
-        vehicle.setDescription("A well-maintained car.");
+        vehicle.setDescription("A good car car.");
         vehicle.setLocation("Dublin");
         vehicle.setStatus("Available");
 
