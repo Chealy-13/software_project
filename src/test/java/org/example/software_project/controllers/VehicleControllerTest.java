@@ -1,8 +1,8 @@
 package org.example.software_project.controllers;
-
 import org.example.software_project.Persistence.VehicleDao;
 import org.example.software_project.business.User;
 import org.example.software_project.business.Vehicle;
+import org.example.software_project.controllers.VehicleController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -22,7 +22,7 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-class VehicleControllerTest {
+public class VehicleControllerTest {
 
     @Mock
     private VehicleDao vehicleDao;
@@ -55,7 +55,7 @@ class VehicleControllerTest {
         Files.createDirectories(uploadPath);
 
         String result = vehicleController.addCar(
-                        "Alfa Romeo", "Gulietta", 2011, 20000, 15000, "Diesel", "Manual",
+                "Alfa Romeo", "Gulietta", 2011, 20000, 15000, "Diesel", "Manual",
                 "Sedan", "Fantastic car", "Dublin", mockImageFile, session, redirectAttributes);
 
         verify(vehicleDao, times(1)).saveVehicle(any(Vehicle.class), eq("car.jpg"));

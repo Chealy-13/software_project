@@ -77,7 +77,6 @@ class VehicleDaoImplTest {
         assertEquals("Available", vehicles.get(0).getStatus());
         assertEquals("/images/ford_fiesta.jpg", vehicles.get(0).getImage_url());
     }
-
     @Test
     void testSaveVehicle() throws Exception {
 
@@ -105,4 +104,3 @@ class VehicleDaoImplTest {
         assertEquals("/images/tesla.png", vehicle.getImage_url());
     }
 }
-
