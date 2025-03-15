@@ -29,7 +29,9 @@ public class FavoriteController {
             return "redirect:/loginPage";
         }
 
-        favoriteDao.addFavorite((long)user.getId(), vehicleId);
+        if (!favoriteDao.isFavorite((long) user.getId(), vehicleId)) {
+            favoriteDao.addFavorite((long) user.getId(), vehicleId);
+        }
         return "redirect:/favorites";
     }
 
