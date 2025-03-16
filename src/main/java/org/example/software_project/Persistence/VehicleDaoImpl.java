@@ -374,7 +374,8 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
                             rs.getString("description"),
                             rs.getString("location"),
                             rs.getString("status"),
-                            getVehicleImages(rs.getLong("id"))
+                            getVehicleImages(rs.getLong("id")),
+                            null //setting img url to null just to match cnstructor.
                     );
                 }
             }
