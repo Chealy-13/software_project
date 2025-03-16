@@ -1,10 +1,8 @@
 package org.example.software_project.Persistence;
 
 import org.example.software_project.business.Vehicle;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -317,6 +315,18 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
         }
 
         return imageUrls;
+    }
+
+    @Override
+    public void deleteVehicle(Long listingId) {
+        String sql = "DELETE FROM vehicles WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, listingId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 

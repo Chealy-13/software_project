@@ -15,4 +15,6 @@ public interface VehicleDao {
     List<Vehicle> getAllVehiclesWithImages();
 
     List<Vehicle> getVehiclesBySeller(int sellerId);
+
+    void deleteVehicle(Long listingId);
 }
