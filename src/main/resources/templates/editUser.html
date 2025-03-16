@@ -1,0 +1,15 @@
+<h2>Edit User</h2>
+<form action="/admin/updateUser" method="post">
+    <input type="hidden" name="id" th:value="${user.id}">
+    <label>Username:</label>
+    <input type="text" name="username" th:value="${user.username}" required>
+    <label>Email:</label>
+    <input type="email" name="email" th:value="${user.email}" required>
+    <label>Role:</label>
+    <select name="role">
+        <option value="1" th:selected="${user.role == 1}">Buyer</option>
+        <option value="2" th:selected="${user.role == 2}">Seller</option>
+        <option value="3" th:selected="${user.role == 3}">Admin</option>
+    </select>
+    <button type="submit">Save</button>
+</form>
