@@ -1,0 +1,55 @@
+<h2>Admin Dashboard</h2>
+
+<h3>All Users</h3>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.role}"></td>
+        <td>
+            <form action="/admin/editUser" method="get">
+                <input type="hidden" name="userId" th:value="${user.id}">
+                <button type="submit">Edit</button>
+            </form>
+            <form action="/admin/deleteUser" method="post">
+                <input type="hidden" name="userId" th:value="${user.id}">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+</table>
+
+<h3>All Listings</h3>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Make</th>
+        <th>Model</th>
+        <th>Price</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="vehicle : ${listings}">
+        <td th:text="${vehicle.id}"></td>
+        <td th:text="${vehicle.make}"></td>
+        <td th:text="${vehicle.model}"></td>
+        <td th:text="${vehicle.price}"></td>
+        <td>
+            <form action="/admin/editListing" method="get">
+                <input type="hidden" name="listingId" th:value="${vehicle.id}">
+                <button type="submit">Edit</button>
+            </form>
+            <form action="/admin/deleteListing" method="post">
+                <input type="hidden" name="listingId" th:value="${vehicle.id}">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+</table>

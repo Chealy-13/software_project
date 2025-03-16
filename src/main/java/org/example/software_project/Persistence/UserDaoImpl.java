@@ -3,10 +3,11 @@ package org.example.software_project.Persistence;
 import lombok.extern.slf4j.Slf4j;
 import org.example.software_project.business.User;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -264,4 +265,61 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
         }
         return false;
     }
+
+    @Override
+    public List<User> getAllUsers() {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM users";
+
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                User user = User.builder()
+                        .id(rs.getInt("id"))
+                        .username(rs.getString("username"))
+                        .firstName(rs.getString("firstName"))
+                        .secondName(rs.getString("secondName"))
+                        .email(rs.getString("email"))
+                        .password(rs.getString("password"))
+                        .phone(rs.getString("phone"))
+                        .profilePicture(rs.getString("profile_picture"))
+                        .role(rs.getInt("role"))
+                        .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
+                        .build();
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            log.error("Error retrieving all users", e);
+        }
+        return users;
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+        String sql = "DELETE FROM users WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, userId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updateUser(Long id, String username, String email, int role) {
+        String sql = "UPDATE users SET username = ?, email = ?, role = ? WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ps.setString(2, email);
+            ps.setInt(3, role);
+            ps.setLong(4, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+}
 }

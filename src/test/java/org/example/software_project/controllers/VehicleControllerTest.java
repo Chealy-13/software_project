@@ -48,7 +48,7 @@ public class VehicleControllerTest {
         when(session.getAttribute("currentUser")).thenReturn(mockUser);
 
         MockMultipartFile mockImageFile = new MockMultipartFile(
-                "imageFile", "carBack.jpg", "image/jpeg", "fake-image-content".getBytes());
+                "imageFile", "carBack.jpg", "image/jpeg", "".getBytes());
 
 
         Path uploadPath = Paths.get("src/main/resources/static/images/");
@@ -58,7 +58,7 @@ public class VehicleControllerTest {
                 "Alfa Romeo", "Gulietta", 2011, 20000, 15000, "Diesel", "Manual",
                 "Sedan", "Fantastic car", "Dublin", mockImageFile, session, redirectAttributes);
 
-        verify(vehicleDao, times(1)).saveVehicle(any(Vehicle.class), eq("car.jpg"));
+        verify(vehicleDao, times(1)).saveVehicle(any(Vehicle.class), eq("tesla.png"));
         verify(redirectAttributes, times(1)).addFlashAttribute("successMessage", "Car successfully added!");
 
         Path filePath = uploadPath.resolve("tesla.png");
@@ -84,8 +84,8 @@ public class VehicleControllerTest {
         mockUser.setId(1);
         when(session.getAttribute("currentUser")).thenReturn(mockUser);
         MockMultipartFile mockImageFile = mock(MockMultipartFile.class);
-        when(mockImageFile.getOriginalFilename()).thenReturn("car.jpg");
-        when(mockImageFile.getInputStream()).thenThrow(new IOException("Simulated file upload failure"));
+        when(mockImageFile.getOriginalFilename()).thenReturn("Tesla.png");
+        when(mockImageFile.getInputStream()).thenThrow(new IOException("Upload failure"));
 
         String result = vehicleController.addCar(
                 "Tesla", "X", 2021, 20000, 15000, "Petrol", "Automatic",

@@ -1,0 +1,11 @@
+<h2>Edit Listing</h2>
+<form action="/admin/updateListing" method="post">
+    <input type="hidden" name="id" th:value="${listing.id}">
+    <label>Make:</label>
+    <input type="text" name="make" th:value="${listing.make}" required>
+    <label>Model:</label>
+    <input type="text" name="model" th:value="${listing.model}" required>
+    <label>Price:</label>
+    <input type="number" name="price" th:value="${listing.price}" required>
+    <button type="submit">Save</button>
+</form>

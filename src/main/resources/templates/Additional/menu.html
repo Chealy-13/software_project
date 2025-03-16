@@ -45,11 +45,15 @@
                     <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.role == 1}">
                         <a class="nav-link text-white fw-semibold" th:href="@{/vehicles}">Search Cars</a>
                     </li>
+                    <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.role == 3}">
+                        <a class="nav-link fw-semibold text-danger" th:href="@{/admin}">Admin Dashboard</a>
+                    </li>
 
                     <!--logout-->
                     <li class="nav-item" th:if="${session.currentUser != null}">
                         <a class="nav-link text-white fw-semibold" th:href="@{/logout}">Logout</a>
                     </li>
+
                 </ul>
             </div>
         </div>

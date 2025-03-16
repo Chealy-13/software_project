@@ -325,6 +325,65 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
         return imageUrls;
     }
 
+    @Override
+    public void deleteVehicle(Long listingId) {
+        String sql = "DELETE FROM vehicles WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, listingId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updateVehicle(Long id, String make, String model, double price) {
+        String sql = "UPDATE vehicles SET make = ?, model = ?, price = ? WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, make);
+            ps.setString(2, model);
+            ps.setDouble(3, price);
+            ps.setLong(4, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Vehicle getVehicleById(Long vehicleId) {
+        String sql = "SELECT * FROM vehicles WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, vehicleId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Vehicle(
+                            rs.getLong("id"),
+                            rs.getLong("seller_id"),
+                            rs.getString("make"),
+                            rs.getString("model"),
+                            rs.getInt("year"),
+                            rs.getDouble("price"),
+                            rs.getInt("mileage"),
+                            rs.getString("fuel_type"),
+                            rs.getString("transmission"),
+                            rs.getString("category"),
+                            rs.getString("description"),
+                            rs.getString("location"),
+                            rs.getString("status"),
+                            getVehicleImages(rs.getLong("id")),
+                            null //setting img url to null just to match cnstructor.
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 
 }
