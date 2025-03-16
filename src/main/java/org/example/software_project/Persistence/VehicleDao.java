@@ -17,4 +17,8 @@ public interface VehicleDao {
     List<Vehicle> getVehiclesBySeller(int sellerId);
 
     void deleteVehicle(Long listingId);
+
+    void updateVehicle(Long id, String make, String model, double price);
+
+    Vehicle getVehicleById(Long vehicleId);
 }
