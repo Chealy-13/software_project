@@ -163,18 +163,53 @@
                     <p class="text-success fw-bold" th:if="${vehicle.status == 'Available'}">Available</p>
                     <p class="text-danger fw-bold" th:if="${vehicle.status == 'Sold'}">Sold</p>
 
-                    <a href="/sendEmail/{vehicle.id}" class="btn btn-danger w-100 mt-3">Message Seller</a>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            th:data-bs-target="'#messageModal' + ${vehicle.id}">
+                        Contact Seller
+                    </button>
                     <br>
                     <form action="/favorites/add" method="post">
-                        <input type="hidden" name="vehicleId" th:value="${vehicle.id}" />
+                        <input type="hidden" name="vehicleId" th:value="${vehicle.id}"/>
                         <button type="submit" class="btn btn-outline-danger w-100 mt-2">Add to Favorites</button>
                     </form>
-
-
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+
+<div th:each="vehicle : ${vehicles}">
+    <div class="modal fade" th:id="'messageModal' + ${vehicle.id}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Send Message to Seller</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/sendMessage}" method="post">
+                        <input type="hidden" name="vehicleId" th:value="${vehicle.id}">
+                        <div class="mb-3">
+                            <label class="form-label">Your Email</label>
+                            <input type="email" class="form-control" name="buyerEmail" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Message</label>
+                            <textarea class="form-control" name="message" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</div>
+</div>
+</div>
 </div>
 
 
