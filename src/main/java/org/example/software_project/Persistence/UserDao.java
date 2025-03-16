@@ -18,4 +18,6 @@ public interface UserDao {
     List<User> getAllUsers();
 
     void deleteUser(Long userId);
+
+    void updateUser(Long id, String username, String email, int role);
 }
