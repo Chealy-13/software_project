@@ -8,4 +8,6 @@ public interface FavoriteDao {
     void addFavorite(Long userId, Long vehicleId);
     void removeFavorite(Long userId, Long vehicleId);
     List<Vehicle> getFavoritesByUser(Long userId);
+
+    boolean isFavorite(Long userId, Long vehicleId);
 }

@@ -23,16 +23,18 @@ public class FavoriteDaoImpl extends MySQLDao implements FavoriteDao{
 
     @Override
     public void addFavorite(Long userId, Long vehicleId) {
-        String sql = "INSERT INTO favorites (user_id, vehicle_id) VALUES (?, ?)";
+        if (!isFavorite(userId, vehicleId)) {
+            String sql = "INSERT INTO favorites (user_id, vehicle_id) VALUES (?, ?)";
 
-        try (Connection conn = super.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setLong(1, userId);
-            ps.setLong(2, vehicleId);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("SQL Exception while adding favorite.");
-            e.printStackTrace();
+            try (Connection conn = super.getConnection();
+                 PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setLong(1, userId);
+                ps.setLong(2, vehicleId);
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println("SQL Exception while adding favorite.");
+                e.printStackTrace();
+            }
         }
     }
 
@@ -77,6 +79,8 @@ public class FavoriteDaoImpl extends MySQLDao implements FavoriteDao{
     }
 
     private Vehicle mapRowToVehicle(ResultSet rs) throws SQLException {
+        List<String> images = getVehicleImages(rs.getLong("id"));
+
         return new Vehicle(
                 rs.getLong("id"),
                 rs.getLong("seller_id"),
@@ -91,9 +95,11 @@ public class FavoriteDaoImpl extends MySQLDao implements FavoriteDao{
                 rs.getString("description"),
                 rs.getString("location"),
                 rs.getString("status"),
-                getVehicleImages(rs.getLong("id"))
+                images,
+                images.isEmpty() ? null : images.get(0)
         );
     }
+
 
     private List<String> getVehicleImages(Long vehicleId) {
         List<String> imageUrls = new ArrayList<>();
@@ -116,4 +122,27 @@ public class FavoriteDaoImpl extends MySQLDao implements FavoriteDao{
 
         return imageUrls;
     }
+
+    @Override
+    public boolean isFavorite(Long userId, Long vehicleId) {
+        String sql = "SELECT COUNT(*) FROM favorites WHERE user_id = ? AND vehicle_id = ?";
+
+        try (Connection conn = super.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, userId);
+            ps.setLong(2, vehicleId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL Exception while checking favorite.");
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
 }

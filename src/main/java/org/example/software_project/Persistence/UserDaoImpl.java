@@ -62,15 +62,15 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
 
 
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                // Set the parameters for the SQL query
-                ps.setString(1, user.getUsername()); // Name
+
+                ps.setString(1, user.getUsername());
                 ps.setString(2, user.getFirstName());
                 ps.setString(3, user.getSecondName());
-                ps.setString(4, user.getEmail()); // Email
-                ps.setString(5, user.getPassword()); // Password
-                ps.setString(6, user.getPhone()); // Phone
-                ps.setInt(7, user.getRole()); // role
-                 ps.setString(8, user.getProfilePicture()); // Profile picture (nullable)
+                ps.setString(4, user.getEmail());
+                ps.setString(5, user.getPassword());
+                ps.setString(6, user.getPhone());
+                ps.setInt(7, user.getRole());
+                 ps.setString(8, user.getProfilePicture());
 
                 int rowsAffected = ps.executeUpdate();
                 return rowsAffected > 0;
@@ -88,10 +88,10 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
 
     private boolean validateUser(User user) {
         return user != null &&
-                user.getUsername() != null && !user.getUsername().isBlank() && // Ensure 'username' is provided
-                user.getPassword() != null && !user.getPassword().isBlank() && // Ensure 'password' is provided
-                user.getEmail() != null && !user.getEmail().isBlank() && // Ensure 'email' is provided
-                user.getPhone() != null && !user.getPhone().isBlank(); // Ensure 'phone' is provided
+                user.getUsername() != null && !user.getUsername().isBlank() &&
+                user.getPassword() != null && !user.getPassword().isBlank() &&
+                user.getEmail() != null && !user.getEmail().isBlank() &&
+                user.getPhone() != null && !user.getPhone().isBlank();
     }
 
 
