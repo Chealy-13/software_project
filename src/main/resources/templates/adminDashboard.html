@@ -15,6 +15,10 @@
         <td th:text="${user.email}"></td>
         <td th:text="${user.role}"></td>
         <td>
+            <form action="/admin/editUser" method="get">
+                <input type="hidden" name="userId" th:value="${user.id}">
+                <button type="submit">Edit</button>
+            </form>
             <form action="/admin/deleteUser" method="post">
                 <input type="hidden" name="userId" th:value="${user.id}">
                 <button type="submit">Delete</button>
@@ -38,6 +42,10 @@
         <td th:text="${vehicle.model}"></td>
         <td th:text="${vehicle.price}"></td>
         <td>
+            <form action="/admin/editListing" method="get">
+                <input type="hidden" name="listingId" th:value="${vehicle.id}">
+                <button type="submit">Edit</button>
+            </form>
             <form action="/admin/deleteListing" method="post">
                 <input type="hidden" name="listingId" th:value="${vehicle.id}">
                 <button type="submit">Delete</button>
