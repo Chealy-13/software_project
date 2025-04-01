@@ -22,4 +22,6 @@ public interface VehicleDao {
     void updateVehicle(Long id, String make, String model, double price);
 
     Vehicle getVehicleById(Long vehicleId);
+
+    void setFlagStatus(Long listingId, boolean flagged);
 }

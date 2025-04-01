@@ -96,7 +96,8 @@ public class FavoriteDaoImpl extends MySQLDao implements FavoriteDao{
                 rs.getString("location"),
                 rs.getString("status"),
                 images,
-                images.isEmpty() ? null : images.get(0)
+                images.isEmpty() ? null : images.get(0),
+                rs.getBoolean("flagged")
         );
     }
 
