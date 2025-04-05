@@ -13,9 +13,11 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
     public VehicleDaoImpl() {
         super();
     }
+
     public VehicleDaoImpl(String propertiesFilename) {
         super(propertiesFilename);
     }
+
     /**
      * Saves a new vehicle listing to the database.
      *
@@ -131,7 +133,8 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
                 rs.getString("location"),
                 rs.getString("status"),
                 images,
-                images.isEmpty() ? null : images.get(0)
+                images.isEmpty() ? null : images.get(0),
+                rs.getBoolean("flagged")
         );
     }
 
@@ -231,6 +234,7 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
      * it queries the database to fetch all vehicles where the `seller_id`
      * matches the provided seller's ID. Each vehicle is mapped from the result set
      * into a `Vehicle` object and added to the list.
+     *
      * @param sellerId The ID of the seller whose vehicles are being retrieved.
      * @return A list of `Vehicle` objects associated with the specified seller.
      * If no vehicles are found, returns an empty list.
@@ -262,7 +266,8 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
                             rs.getString("location"),
                             rs.getString("status"),
                             images, // List of image URLs
-                            images.isEmpty() ? null : images.get(0)
+                            images.isEmpty() ? null : images.get(0),
+                            rs.getBoolean("flagged")
                     );
 
                     vehicles.add(vehicle);
@@ -375,7 +380,8 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
                             rs.getString("location"),
                             rs.getString("status"),
                             getVehicleImages(rs.getLong("id")),
-                            null //setting img url to null just to match cnstructor.
+                            null, //setting img url to null just to match cnstructor.
+                            rs.getBoolean("flagged")
                     );
                 }
             }
@@ -384,6 +390,20 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
         }
         return null;
     }
+
+    @Override
+    public void setFlagStatus(Long listingId, boolean flagged) {
+        String sql = "UPDATE vehicles SET flagged = ? WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setBoolean(1, flagged);
+            ps.setLong(2, listingId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 }

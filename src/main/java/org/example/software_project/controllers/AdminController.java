@@ -79,4 +79,16 @@ public class AdminController {
         vehicleDao.updateVehicle(id, make, model, price);
         return "redirect:/admin?success=ListingUpdated";
     }
+    @PostMapping("/admin/flagListing")
+    public String flagListing(@RequestParam Long listingId) {
+        vehicleDao.setFlagStatus(listingId, true);
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/admin/unflagListing")
+    public String unflagListing(@RequestParam Long listingId) {
+        vehicleDao.setFlagStatus(listingId, false);
+        return "redirect:/admin";
+    }
+
 }

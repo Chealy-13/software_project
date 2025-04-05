@@ -25,7 +25,9 @@ public class Vehicle {
     private String status;
     private List<String> image_url;
     private String imageUrl;
+    private boolean flagged;
 
 
-    }
+
+}
 
