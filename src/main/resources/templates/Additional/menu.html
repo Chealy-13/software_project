@@ -49,6 +49,11 @@
                         <a class="nav-link fw-semibold text-danger" th:href="@{/admin}">Admin Dashboard</a>
                     </li>
 
+                    <li class="nav-item" th:if="${session.currentUser != null}">
+                        <a class="nav-link text-white fw-semibold"
+                           th:href="@{/reviews/{userId}(userId=${session.currentUser.id})}">Reviews</a>
+                    </li>
+
                     <!--logout-->
                     <li class="nav-item" th:if="${session.currentUser != null}">
                         <a class="nav-link text-white fw-semibold" th:href="@{/logout}">Logout</a>
