@@ -7,6 +7,8 @@ import org.example.software_project.Persistence.VehicleDao;
 import org.example.software_project.Persistence.VehicleDaoImpl;
 import org.example.software_project.business.User;
 import org.example.software_project.business.Vehicle;
+import org.example.software_project.service.EmailPassword;
+import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 public class UserController {
@@ -24,6 +28,9 @@ public class UserController {
 
     private final UserDao userDao;
     private final VehicleDao vehicleDao;
+    @Autowired
+    private EmailPassword emailPassword;
+
 
     @Autowired
     public UserController(UserDao userDao, VehicleDao vehicleDao) {
@@ -113,10 +120,10 @@ public class UserController {
      * redirecting them to the home page when login is successful.
      *
      * @param //username The username provided by the user during the login stage.
+     * @param //session  The current HTTP session to store the authenticated user's details.
+     *                   Redirects to "index" if successfully logged in or back to "login" if authentication fails.
      * @param// password The password provided by the user.
      * @param// model    The model object to pass notifications.
-     * @param //session  The current HTTP session to store the authenticated user's details.
-     *                 Redirects to "index" if successfully logged in or back to "login" if authentication fails.
      */
 
     @GetMapping("/loginPage")
@@ -155,6 +162,7 @@ public class UserController {
             return "login";
         }
     }
+
     /**
      * Showcases the logged-in user's profile details.
      * Only logged-in user can view the profile information.
@@ -176,6 +184,7 @@ public class UserController {
         model.addAttribute("user", loggedInUser);
         return "profile";
     }
+
     /**
      * This logs out from the current user invalidating their session.
      *
@@ -195,7 +204,7 @@ public class UserController {
      * checks that the user exists in the database before updating their role
      * and makes the change in both the database and the current session.
      *
-     * @param userId of the user whose role is being changed.
+     * @param userId  of the user whose role is being changed.
      * @param newRole to be assigned (1 for Buyer, 2 for Seller).
      * @param session the current HTTP session to update the user role.
      * @return A redirect to the profile page with a success or error message.
@@ -237,7 +246,7 @@ public class UserController {
      * this method retrieves and displays all vehicles listed by the currently logged-in seller.
      * If the user is not authenticated or is not a seller, they are redirected to the login page.
      *
-     * @param model object used to pass the seller's listings to the view.
+     * @param model   object used to pass the seller's listings to the view.
      * @param session object to retrieve the currently logged-in user.
      * @return The name of the Thymeleaf template (`"sellerListings"`) that displays the seller's vehicles.
      * If the user is not logged in or is not a seller, redirects to the login page.
@@ -261,7 +270,7 @@ public class UserController {
         User currentUser = (User) session.getAttribute("currentUser");
 
         if (currentUser == null || currentUser.getRole() != 3) {
-            return "redirect:/loginPage"; //if not admin or unauthorized then redirect to login
+            return "redirect:/loginPage";
         }
 
         List<User> users = userDao.getAllUsers();
@@ -273,5 +282,12 @@ public class UserController {
         return "adminDashboard";
     }
 
+    @GetMapping("/forgotPassword")
+    public String showForgotPasswordForm() {
+        return "forgotPassword";
+    }
 
+
+
+    
 }

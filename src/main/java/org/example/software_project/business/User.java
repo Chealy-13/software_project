@@ -25,5 +25,8 @@ public class User {
     private String profilePicture;
     private LocalDateTime createdAt;
     private int role;
+    private String resetToken;
+    private LocalDateTime tokenExpiry;
+
 }
 
