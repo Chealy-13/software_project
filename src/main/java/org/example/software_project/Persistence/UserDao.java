@@ -2,6 +2,7 @@ package org.example.software_project.Persistence;
 
 import org.example.software_project.business.User;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface UserDao {
@@ -20,4 +21,9 @@ public interface UserDao {
     void deleteUser(Long userId);
 
     void updateUser(Long id, String username, String email, int role);
-}
+
+    boolean updateResetToken(int userId, String token);
+
+    User getUserByResetToken(String token);
+
+    boolean updatePassword(User user);}

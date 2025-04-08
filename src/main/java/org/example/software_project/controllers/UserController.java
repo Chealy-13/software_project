@@ -286,8 +286,28 @@ public class UserController {
     public String showForgotPasswordForm() {
         return "forgotPassword";
     }
+    @PostMapping("/sendResetLink")
+    public String sendResetLink(@RequestParam("email") String email, Model model) {
+        User user = userDao.getUserByEmail(email);
+        if (user != null) {
+            String token = UUID.randomUUID().toString();
+            user.setResetToken(token);
+            user.setTokenExpiry(LocalDateTime.now().plusHours(1));
+            userDao.updateResetToken(user.getId(), token);
+
+            String resetLink = "http://localhost:8080/resetPassword?token=" + token;
+
+            emailPassword.sendPasswordResetEmail(user.getEmail(), resetLink);
+            model.addAttribute("message", "Reset link sent to your email.");
+        } else {
+            model.addAttribute("errorMessage", "No account found with that email.");
+        }
+
+        return "login";
+    }
+
+
+        }
 
 
 
-    
-}
