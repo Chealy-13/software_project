@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.software_project.business.User;
 import org.springframework.stereotype.Component;
 
-
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +25,6 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
         super(propertiesFilename);
     }
 
-
     @Override
     public boolean register(User user) {
         if (!validateUser(user)) {
@@ -36,16 +35,13 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             throw new IllegalArgumentException("Invalid email format.");
         }
 
-
         if (user.getPassword().length() < 8) {
             throw new IllegalArgumentException("Password must be at least 8 characters long.");
         }
 
-
         if (user.getUsername().length() > 20) {
             throw new IllegalArgumentException("Username is too long. Maximum 20 characters.");
         }
-
 
         if (isUsernameOrEmailTaken(user.getUsername(), user.getEmail())) {
             return false;
@@ -60,9 +56,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
                 return false;
             }
 
-
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
-
                 ps.setString(1, user.getUsername());
                 ps.setString(2, user.getFirstName());
                 ps.setString(3, user.getSecondName());
@@ -70,7 +64,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
                 ps.setString(5, user.getPassword());
                 ps.setString(6, user.getPhone());
                 ps.setInt(7, user.getRole());
-                 ps.setString(8, user.getProfilePicture());
+                ps.setString(8, user.getProfilePicture());
 
                 int rowsAffected = ps.executeUpdate();
                 return rowsAffected > 0;
@@ -94,15 +88,6 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
                 user.getPhone() != null && !user.getPhone().isBlank();
     }
 
-
-    /**
-     * Logss in the user by validating/checking the provided username and password with the database.
-     *
-     * @param username     the username of the user trying to log in
-     * @param password the password of the user trying to log in
-     * @return object if the login is successful, or null if the credentials are invalid
-     * @throws IllegalArgumentException if either the username or password is null or blank
-     */
     @Override
     public User login(String username, String password) {
         if (username == null || username.isBlank()) {
@@ -120,32 +105,12 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-
                     String hashedPassword = rs.getString("password");
-
-                     if (org.mindrot.jbcrypt.BCrypt.checkpw(password, hashedPassword)) {
-                         int userRole = rs.getInt("role");
-                         log.debug("Login successful for {} with Role={}", username, userRole);
-
-                         return User.builder()
-                                .id(rs.getInt("id"))
-                                .username(rs.getString("username"))
-                                .firstName(rs.getString("firstName"))
-                                .secondName(rs.getString("secondName"))
-                                .email(rs.getString("email"))
-                                .password(rs.getString("password")) 
-                                .phone(rs.getString("phone"))
-                                .profilePicture(rs.getString("profile_picture"))
-                                 .role(userRole)
-                                 .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
-                                .build();
-                    } else {
-                        log.warn("Invalid login attempt for username: {}", username);
-                        return null;
+                    if (org.mindrot.jbcrypt.BCrypt.checkpw(password, hashedPassword)) {
+                        return buildUserFromResultSet(rs);
                     }
                 }
             }
-
         } catch (SQLException e) {
             log.error("An error occurred when logging in user with username: {}", username, e);
         }
@@ -158,7 +123,6 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
              PreparedStatement ps = conn.prepareStatement(checkSql)) {
             ps.setString(1, username);
             ps.setString(2, email);
-
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt(1) > 0;
@@ -170,13 +134,6 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
         return false;
     }
 
-    /**
-     *Retrieves a user from the database using their user id.
-     *this method queries the database to find a user associated with the given user id.
-     *If found, it constructs and returns a user object with the associated data.
-     * @param userId of the user to get.
-     * @return User object if the user id exists in te database, otherwise returns null.
-     */
     @Override
     public User getUserById(int userId) {
         String sql = "SELECT * FROM users WHERE id = ?";
@@ -185,18 +142,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             ps.setInt(1, userId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return User.builder()
-                            .id(rs.getInt("id"))
-                            .username(rs.getString("username"))
-                            .firstName(rs.getString("firstName"))
-                            .secondName(rs.getString("secondName"))
-                            .email(rs.getString("email"))
-                            .password(rs.getString("password"))
-                            .phone(rs.getString("phone"))
-                            .role(rs.getInt("role"))
-                            .profilePicture(rs.getString("profile_picture"))
-                            .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
-                            .build();
+                    return buildUserFromResultSet(rs);
                 }
             }
         } catch (SQLException e) {
@@ -205,14 +151,6 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
         return null;
     }
 
-    /**
-     *retrieves a user from the database using their email.
-     *this method queries the database to find a user associated with the given email address.
-     *If found, it constructs and returns a user object with the associated data.
-     *
-     * @param email address of the user to get.
-     * @return User object if the email exists in the database, otherwise returns null.
-     */
     @Override
     public User getUserByEmail(String email) {
         String sql = "SELECT * FROM Users WHERE email = ?";
@@ -221,18 +159,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return User.builder()
-                            .id(rs.getInt("id"))
-                            .username(rs.getString("username"))
-                            .firstName(rs.getString("firstName"))
-                            .secondName(rs.getString("secondName"))
-                            .email(rs.getString("email"))
-                            .password(rs.getString("password"))
-                            .phone(rs.getString("phone"))
-                            .profilePicture(rs.getString("profile_picture"))
-                            .role(rs.getInt("role"))
-                            .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
-                            .build();
+                    return buildUserFromResultSet(rs);
                 }
             }
         } catch (SQLException e) {
@@ -241,15 +168,6 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
         return null;
     }
 
-    /**
-     *updates the role of a user in the database.
-     *This method chamges the role of a user based on their user ID.
-     *it makes sure that the role is updated correctly in the database.
-     *
-     * @param userId of the user whose role needs to be updated.
-     * @param newRole to assign to the user (1 = Buyer, 2 = Seller, 3 = Admin).
-     * @return true if the update was successful, false otherwise.
-     */
     @Override
     public boolean updateUserRole(int userId, int newRole) {
         String sql = "UPDATE users SET role = ? WHERE id = ?";
@@ -257,9 +175,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, newRole);
             ps.setInt(2, userId);
-
-            int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             log.error("SQL error while updating role for user ID: " + userId, e);
         }
@@ -276,19 +192,7 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                User user = User.builder()
-                        .id(rs.getInt("id"))
-                        .username(rs.getString("username"))
-                        .firstName(rs.getString("firstName"))
-                        .secondName(rs.getString("secondName"))
-                        .email(rs.getString("email"))
-                        .password(rs.getString("password"))
-                        .phone(rs.getString("phone"))
-                        .profilePicture(rs.getString("profile_picture"))
-                        .role(rs.getInt("role"))
-                        .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
-                        .build();
-                users.add(user);
+                users.add(buildUserFromResultSet(rs));
             }
         } catch (SQLException e) {
             log.error("Error retrieving all users", e);
@@ -321,5 +225,90 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-}
+    }
+
+    @Override
+    public boolean updateResetToken(int userId, String token) {
+        String sql = "UPDATE users SET reset_token = ?, token_expiry = ? WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, token);
+            stmt.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now().plusHours(1)));
+            stmt.setInt(3, userId);
+
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public User getUserByResetToken(String token) {
+        String sql = "SELECT * FROM users WHERE reset_token = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, token);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return extractUserFromResultSet(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean updatePassword(User user) {
+        String sql = "UPDATE users SET password = ?, reset_token = NULL, token_expiry = NULL WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, user.getPassword());
+            stmt.setInt(2, user.getId());
+
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private User buildUserFromResultSet(ResultSet rs) throws SQLException {
+        return User.builder()
+                .id(rs.getInt("id"))
+                .username(rs.getString("username"))
+                .firstName(rs.getString("firstName"))
+                .secondName(rs.getString("secondName"))
+                .email(rs.getString("email"))
+                .password(rs.getString("password"))
+                .phone(rs.getString("phone"))
+                .profilePicture(rs.getString("profile_picture"))
+                .role(rs.getInt("role"))
+                .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
+                .build();
+    }
+
+    private User extractUserFromResultSet(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setId(rs.getInt("id"));
+        user.setUsername(rs.getString("username"));
+        user.setPassword(rs.getString("password"));
+        user.setFirstName(rs.getString("firstName"));
+        user.setSecondName(rs.getString("secondName"));
+        user.setEmail(rs.getString("email"));
+        user.setPhone(rs.getString("phone"));
+        user.setProfilePicture(rs.getString("profile_picture"));
+        user.setRole(rs.getInt("role"));
+        user.setResetToken(rs.getString("reset_token"));
+
+        Timestamp expiry = rs.getTimestamp("token_expiry");
+        user.setTokenExpiry(expiry != null ? expiry.toLocalDateTime() : null);
+
+        return user;
+    }
 }
