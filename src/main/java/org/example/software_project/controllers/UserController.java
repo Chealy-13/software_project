@@ -286,6 +286,7 @@ public class UserController {
     public String showForgotPasswordForm() {
         return "forgotPassword";
     }
+
     @PostMapping("/sendResetLink")
     public String sendResetLink(@RequestParam("email") String email, Model model) {
         User user = userDao.getUserByEmail(email);
@@ -306,8 +307,32 @@ public class UserController {
         return "login";
     }
 
+    @GetMapping("/resetPassword")
+    public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
+        model.addAttribute("token", token);
+        return "resetPassword";
+    }
 
+    @PostMapping("/resetPassword")
+    public String resetPassword(@RequestParam("token") String token,
+                                @RequestParam("newPassword") String newPassword,
+                                Model model) {
+        User user = userDao.getUserByResetToken(token);
+
+        if (user != null && user.getTokenExpiry().isAfter(LocalDateTime.now())) {
+            user.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+            user.setResetToken(null);
+            user.setTokenExpiry(null);
+
+            userDao.updatePassword(user);
+
+            model.addAttribute("message", "Password reset successfully!");
+            return "login";
+        } else {
+            model.addAttribute("errorMessage", "Invalid or expired token.");
+            return "resetPassword";
         }
-
+    }
+}
 
 
