@@ -184,6 +184,47 @@ public class UserController {
         model.addAttribute("user", loggedInUser);
         return "profile";
     }
+    @GetMapping("/editProfile")
+    public String showEditProfileForm(Model model, HttpSession session) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return "redirect:/loginPage";
+        }
+
+        model.addAttribute("user", currentUser);
+        return "editProfile";
+    }
+
+    @PostMapping("/updateProfile")
+    public String updateProfile(@RequestParam("id") int id,
+                                @RequestParam("username") String username,
+                                @RequestParam("firstName") String firstName,
+                                @RequestParam("secondName") String secondName,
+                                @RequestParam("email") String email,
+                                @RequestParam("phone") String phone,
+                                HttpSession session,
+                                Model model) {
+
+        User updatedUser = User.builder()
+                .id(id)
+                .username(username)
+                .firstName(firstName)
+                .secondName(secondName)
+                .email(email)
+                .phone(phone)
+                .build();
+
+        boolean success = userDao.updateUserProfile(updatedUser);
+
+        if (success) {
+            session.setAttribute("currentUser", updatedUser);
+            return "redirect:/profile";
+        } else {
+            model.addAttribute("errorMessage", "Failed to update profile.");
+            return "editProfile";
+        }
+    }
+
 
     /**
      * This logs out from the current user invalidating their session.
