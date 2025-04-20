@@ -211,6 +211,25 @@ public class UserDaoImpl extends MySQLDao implements UserDao {
             e.printStackTrace();
         }
     }
+    @Override
+    public boolean updateUserProfile(User user) {
+        String sql = "UPDATE users SET username = ?, firstName = ?, secondName = ?, email = ?, phone = ? WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getFirstName());
+            stmt.setString(3, user.getSecondName());
+            stmt.setString(4, user.getEmail());
+            stmt.setString(5, user.getPhone());
+            stmt.setInt(6, user.getId());
+
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     @Override
     public void updateUser(Long id, String username, String email, int role) {
