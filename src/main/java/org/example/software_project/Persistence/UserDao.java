@@ -23,6 +23,7 @@ public interface UserDao {
     void updateUser(Long id, String username, String email, int role);
 
     boolean updateResetToken(int userId, String token);
+    boolean updateUserProfile(User user);
 
     User getUserByResetToken(String token);
 

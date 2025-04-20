@@ -13,14 +13,14 @@ import java.util.Properties;
  *
  */
 @Slf4j
-public class MySQLDao {
+public abstract class MySQLDao {
     private Properties properties = new Properties();
     private Connection conn = null;
 
-    public MySQLDao(){
+    public MySQLDao() {
     }
 
-    public MySQLDao(Connection conn){
+    public MySQLDao(Connection conn) {
         this.conn = conn;
     }
     /**
@@ -44,23 +44,26 @@ public class MySQLDao {
      * This constructor initializes the data access object and reads the database configuration
      * settings from the provided properties file. It retrieves the path to the properties file
      * and loads all key-value pairs into a Properties object for later use.
+     *
      * @param propertiesFilename the name of the properties file containing database connection
-     * settings, such as URL, username, and password.
+     *                           settings, such as URL, username, and password.
      * @throws IOException if an error occurs while loading the properties from the file,
-     * such as if the file is not found or cannot be read.
+     *                     such as if the file is not found or cannot be read.
      */
-    public MySQLDao(String propertiesFilename){
+    public MySQLDao(String propertiesFilename) {
         properties = new Properties();
         try {
             URL resource = Thread.currentThread().getContextClassLoader().getResource(propertiesFilename);
             if (resource == null) {
                 throw new IllegalStateException("Properties file '" + propertiesFilename + "' not found in classpath.");
             }
-            String rootPath = resource.getPath();    properties.load(new FileInputStream(rootPath));
-        }catch(IOException e){
+            String rootPath = resource.getPath();
+            properties.load(new FileInputStream(rootPath));
+        } catch (IOException e) {
             log.error("An exception occurred when laoding from properties from: " + propertiesFilename, e);
         }
     }
+
     /**
      * Retrieves a database connection using the properties in the properties file.
      * It checks if an existing database connection is available. If a connection
@@ -68,13 +71,14 @@ public class MySQLDao {
      * connection using the database driver, URL, database name, username, and password
      * specified in the properties file. Default values are provided for each property
      * if they are not specified.
+     *
      * @return a Connection object representing the database connection.
-     * @throws SQLException if an error occurs while establishing the connection to the
-     * database, such as incorrect credentials or unreachable database.
+     * @throws SQLException           if an error occurs while establishing the connection to the
+     *                                database, such as incorrect credentials or unreachable database.
      * @throws ClassNotFoundException if the database driver class cannot be found.
      */
     public Connection getConnection() {
-        if(conn != null){
+        if (conn != null) {
             return conn;
         }
         // Retrieve connection information from properties file
@@ -91,7 +95,7 @@ public class MySQLDao {
             // Load the database driver
             Class.forName(driver);
             // TRY to get a connection to the database
-            connection = DriverManager.getConnection(url+database, username, password);
+            connection = DriverManager.getConnection(url + database, username, password);
         } catch (ClassNotFoundException e) {
             System.out.println("ClassNotFoundException occurred when trying to load driver: " + e.getMessage());
             e.printStackTrace();
@@ -111,6 +115,7 @@ public class MySQLDao {
      * exists, it attempts to close it, releasing any database resources associated
      * with that connection. If an error occurs while closing the connection,
      * it logs the exception details and terminates the application.
+     *
      * @param con the Connection object to be freed; it can be null.
      */
 

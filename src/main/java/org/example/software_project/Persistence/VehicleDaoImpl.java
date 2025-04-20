@@ -1,5 +1,6 @@
 package org.example.software_project.Persistence;
 
+import org.example.software_project.business.User;
 import org.example.software_project.business.Vehicle;
 import org.springframework.stereotype.Component;
 
@@ -403,7 +404,6 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
             e.printStackTrace();
         }
     }
-
-
-
 }
+
+
