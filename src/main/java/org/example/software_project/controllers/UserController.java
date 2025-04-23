@@ -282,30 +282,6 @@ public class UserController {
         }
     }
 
-    /**
-     * Displays the seller's vehicle listings.
-     * this method retrieves and displays all vehicles listed by the currently logged-in seller.
-     * If the user is not authenticated or is not a seller, they are redirected to the login page.
-     *
-     * @param model   object used to pass the seller's listings to the view.
-     * @param session object to retrieve the currently logged-in user.
-     * @return The name of the Thymeleaf template (`"sellerListings"`) that displays the seller's vehicles.
-     * If the user is not logged in or is not a seller, redirects to the login page.
-     */
-    @GetMapping("/vehicles/myListings")
-    public String viewMyListings(Model model, HttpSession session) {
-        User currentUser = (User) session.getAttribute("currentUser");
-
-        if (currentUser == null || currentUser.getRole() != 2) {
-            return "redirect:/loginPage";
-        }
-
-        List<Vehicle> myListings = vehicleDao.getVehiclesBySeller(currentUser.getId());
-        model.addAttribute("myListings", myListings);
-
-        return "sellerListings";
-    }
-
     @GetMapping("/admin")
     public String adminDashboard(HttpSession session, Model model) {
         User currentUser = (User) session.getAttribute("currentUser");
