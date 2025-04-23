@@ -122,4 +122,64 @@ public class VehicleController {
         model.addAttribute("vehicles", vehicles);
         return "allVehicles";
     }
+
+    /**
+     * Displays the seller's vehicle listings.
+     * this method retrieves and displays all vehicles listed by the currently logged-in seller.
+     * If the user is not authenticated or is not a seller, they are redirected to the login page.
+     *
+     * @param model   object used to pass the seller's listings to the view.
+     * @param session object to retrieve the currently logged-in user.
+     * @return The name of the Thymeleaf template (`"sellerListings"`) that displays the seller's vehicles.
+     * If the user is not logged in or is not a seller, redirects to the login page.
+     */
+    @GetMapping("/vehicles/myListings")
+    public String viewMyListings(Model model, HttpSession session) {
+        User currentUser = (User) session.getAttribute("currentUser");
+
+        if (currentUser == null || currentUser.getRole() != 2) {
+            return "redirect:/loginPage";
+        }
+
+        List<Vehicle> myListings = vehicleDao.getVehiclesBySeller(currentUser.getId());
+        model.addAttribute("myListings", myListings);
+
+        return "sellerListings";
+    }
+
+    /**
+     * Allows user to delete any of their own listings.
+     *
+     * It ensures that only authenticated sellers can delete their own listings.
+     * It checks whether a user is logged in and has a seller role (role = 2).
+     * Then it verifies that the vehicle being deleted actually belongs to the logged-in user.
+     * If any validation fails, it redirects the user back to their listings with an appropriate error message.
+     * On successful deletion, a success message is shown.
+     *
+     * @param vehicleId of the vehicle to be deleted
+     * @param session the current HTTP session used to identify the logged-in user
+     * @param redirectAttributes used to pass flash messages (success or error) after redirection
+     * @return redirect URL to the seller's listings page or login page if unauthorized
+     */
+    @GetMapping("/deleteListing")
+    public String deleteListing(@RequestParam("vehicleId") Long vehicleId,
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
+
+        User currentUser = (User) session.getAttribute("currentUser");
+
+        if (currentUser == null || currentUser.getRole() != 2) {
+            return "redirect:/loginPage";
+        }
+
+        Vehicle vehicle = vehicleDao.getVehicleById(vehicleId);
+        if (vehicle == null || !vehicle.getSellerId().equals((long) currentUser.getId())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "You cannot delete this listing.");
+            return "redirect:/vehicles/myListings";
+        }
+
+        vehicleDao.deleteVehicle(vehicleId);
+        redirectAttributes.addFlashAttribute("successMessage", "Listing deleted successfully!");
+        return "redirect:/vehicles/myListings";
+    }
 }
