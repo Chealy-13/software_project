@@ -182,4 +182,22 @@ public class VehicleController {
         redirectAttributes.addFlashAttribute("successMessage", "Listing deleted successfully!");
         return "redirect:/vehicles/myListings";
     }
+
+    @GetMapping("/vehicles/view/{id}")
+    public String viewVehicle(@PathVariable("id") Long id, Model model, HttpSession session) {
+        Vehicle vehicle = vehicleDao.getVehicleById(id);
+        if (vehicle == null) {
+            return "errorPage";
+        }
+        model.addAttribute("vehicle", vehicle);
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser != null) {
+            model.addAttribute("currentUser", currentUser);
+        }
+        return "vehicleListing";
+    }
+
+
+
+
 }
