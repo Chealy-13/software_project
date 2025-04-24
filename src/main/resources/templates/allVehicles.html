@@ -160,14 +160,23 @@
                     <p class="card-text"><strong>Location:</strong> <span th:text="${vehicle.location}"></span></p>
                     <p class="card-text"><strong>Description:</strong> <span th:text="${vehicle.description}"></span>
                     </p>
+<!--                    <p class="text-success fw-bold" th:if="${vehicle.status == 'Available'}">Available</p>-->
+<!--                    <p class="text-danger fw-bold" th:if="${vehicle.status == 'Sold'}">Sold</p>-->
+
+<!--                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"-->
+<!--                            th:data-bs-target="'#messageModal' + ${vehicle.id}">-->
+<!--                        Contact Seller-->
+<!--                    </button>-->
+<!--                    <br>-->
                     <p class="text-success fw-bold" th:if="${vehicle.status == 'Available'}">Available</p>
                     <p class="text-danger fw-bold" th:if="${vehicle.status == 'Sold'}">Sold</p>
 
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    <a th:href="@{'/vehicles/view/' + ${vehicle.id}}" class="btn btn-info w-100 mb-2">View</a>
+
+                    <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal"
                             th:data-bs-target="'#messageModal' + ${vehicle.id}">
                         Contact Seller
                     </button>
-                    <br>
                     <form action="/favorites/add" method="post">
                         <input type="hidden" name="vehicleId" th:value="${vehicle.id}"/>
                         <button type="submit" class="btn btn-outline-danger w-100 mt-2">Add to Favorites</button>
