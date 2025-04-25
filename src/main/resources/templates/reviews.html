@@ -11,6 +11,18 @@
 <div class="container mt-4">
     <h2>Reviews for Seller</h2>
 
+    <form method="get" th:action="@{/reviews}">
+        <label for="sellerSelect" class="form-label">Choose a Seller:</label>
+        <select id="sellerSelect" name="sellerId" class="form-select mb-3" onchange="this.form.submit()">
+            <option th:each="seller : ${sellers}"
+                    th:value="${seller.id}"
+                    th:text="${seller.name}"
+                    th:selected="${seller.id == sellerId}">
+            </option>
+        </select>
+    </form>
+
+
     <form th:action="@{/reviews/add}" method="post" class="mb-4">
         <input type="hidden" name="sellerId" th:value="${sellerId}">
         <input type="hidden" name="userId" th:value="${session.currentUser?.id}"/>
@@ -30,7 +42,8 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
-    <h3>Reviews:</h3>
+
+    <h2>Reviews for Seller: <span th:text="${sellerId}"></span></h2>
     <div th:each="review : ${reviews}" class="border p-2 mb-2">
         <strong>
             <span th:each="i : ${#numbers.sequence(1, review.rating)}">⭐</span>
