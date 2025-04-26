@@ -106,6 +106,22 @@ public class VehicleController {
         return "redirect:/vehicles";
     }
 
+    /**
+     * Handles GET requests for searching vehicles based on various filters such as
+     * keyword, price range, year range, mileage, fuel type, location, and sorting criteria.
+     *
+     * @param keyword   keyword to search by make or model
+     * @param minPrice  minimum price filter
+     * @param maxPrice  maximum price filter
+     * @param minYear   minimum manufacturing year filter
+     * @param maxYear   maximum manufacturing year filter
+     * @param mileage   maximum mileage filter
+     * @param fuelType  fuel type filter
+     * @param location  location filter
+     * @param sortBy    sorting criteria (e.g., price, year, newest)
+     * @param model     Spring's Model object used to pass attributes to the view
+     * @return the name of the view displaying the list of matching vehicles
+     */
     @GetMapping("/searchVehicles")
     public String searchVehicles(@RequestParam(required = false) String keyword,
                                  @RequestParam(required = false) Integer minPrice,
@@ -196,6 +212,8 @@ public class VehicleController {
         }
         return "vehicleListing";
     }
+
+
 
 
 

@@ -17,10 +17,21 @@ public class FavoriteDaoImpl extends MySQLDao implements FavoriteDao{
         super();
     }
 
+    /**
+     * Constructor that accepts a custom properties filename for database connection.
+     *
+     * @param propertiesFilename the filename of the database properties file
+     */
     public FavoriteDaoImpl(String propertiesFilename) {
         super(propertiesFilename);
     }
 
+    /**
+     * Adds a vehicle to the user's favorites list if it is not already added.
+     *
+     * @param userId    the ID of the user
+     * @param vehicleId the ID of the vehicle to add
+     */
     @Override
     public void addFavorite(Long userId, Long vehicleId) {
         if (!isFavorite(userId, vehicleId)) {
@@ -38,6 +49,12 @@ public class FavoriteDaoImpl extends MySQLDao implements FavoriteDao{
         }
     }
 
+    /**
+     * Removes a vehicle from the user's favorites list.
+     *
+     * @param userId    the ID of the user
+     * @param vehicleId the ID of the vehicle to remove
+     */
     @Override
     public void removeFavorite(Long userId, Long vehicleId) {
         String sql = "DELETE FROM favorites WHERE user_id = ? AND vehicle_id = ?";
@@ -53,6 +70,13 @@ public class FavoriteDaoImpl extends MySQLDao implements FavoriteDao{
         }
     }
 
+
+    /**
+     * Retrieves a list of favorite vehicles for the specified user.
+     *
+     * @param userId the ID of the user
+     * @return a list of favorite vehicles
+     */
     @Override
     public List<Vehicle> getFavoritesByUser(Long userId) {
         List<Vehicle> favoriteVehicles = new ArrayList<>();
@@ -103,6 +127,12 @@ public class FavoriteDaoImpl extends MySQLDao implements FavoriteDao{
     }
 
 
+    /**
+     * Retrieves a list of image URLs associated with a specific vehicle.
+     *
+     * @param vehicleId the ID of the vehicle
+     * @return a list of image URLs
+     */
     private List<String> getVehicleImages(Long vehicleId) {
         List<String> imageUrls = new ArrayList<>();
         String sql = "SELECT image_url FROM vehicleimages WHERE vehicle_id = ?";
@@ -125,6 +155,13 @@ public class FavoriteDaoImpl extends MySQLDao implements FavoriteDao{
         return imageUrls;
     }
 
+    /**
+     * Checks if a specific vehicle is already in the user's favorites.
+     *
+     * @param userId    the ID of the user
+     * @param vehicleId the ID of the vehicle
+     * @return true if the vehicle is a favorite, false otherwise
+     */
     @Override
     public boolean isFavorite(Long userId, Long vehicleId) {
         String sql = "SELECT COUNT(*) FROM favorites WHERE user_id = ? AND vehicle_id = ?";

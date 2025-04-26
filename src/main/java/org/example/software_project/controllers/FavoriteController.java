@@ -18,10 +18,23 @@ import java.util.List;
 public class FavoriteController {
     private final FavoriteDao favoriteDao;
 
+    /**
+     * Controller for handling operations related to user's favorite vehicles.
+     * Allows users to add, remove, and view their favorite vehicles.
+     */
     public FavoriteController(FavoriteDao favoriteDao) {
         this.favoriteDao = favoriteDao;
     }
 
+
+    /**
+     * Adds a vehicle to the current user's list of favorites.
+     * If the user is not logged in, redirects to the login page.
+     *
+     * @param vehicleId the ID of the vehicle to add to favorites
+     * @param session   the current HTTP session to retrieve the logged-in user
+     * @return a redirect to the favorites page or login page
+     */
     @PostMapping("/add")
     public String addFavorite(@RequestParam Long vehicleId, HttpSession session) {
         User user = (User) session.getAttribute("currentUser");
@@ -35,6 +48,14 @@ public class FavoriteController {
         return "redirect:/favorites";
     }
 
+    /**
+     * Removes a vehicle from the current user's list of favorites.
+     * If the user is not logged in, redirects to the login page.
+     *
+     * @param vehicleId the ID of the vehicle to remove from favorites
+     * @param session   the current HTTP session to retrieve the logged-in user
+     * @return a redirect to the favorites page or login page
+     */
     @PostMapping("/remove")
     public String removeFavorite(@RequestParam Long vehicleId, HttpSession session) {
         User user = (User) session.getAttribute("currentUser");
@@ -46,6 +67,15 @@ public class FavoriteController {
         return "redirect:/favorites";
     }
 
+
+    /**
+     * Displays the list of favorite vehicles for the current user.
+     * If the user is not logged in, redirects to the login page.
+     *
+     * @param session the current HTTP session to retrieve the logged-in user
+     * @param model   the Model to pass favorite vehicles to the view
+     * @return the name of the favorites view page or a redirect to login page
+     */
     @GetMapping
     public String viewFavorites(HttpSession session, Model model) {
         User user = (User) session.getAttribute("currentUser");
