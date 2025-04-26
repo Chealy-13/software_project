@@ -1,5 +1,6 @@
 package org.example.software_project.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.example.software_project.Persistence.UserDao;
 import org.example.software_project.Persistence.VehicleDao;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller
 public class AdminController {
 
@@ -22,6 +25,28 @@ public class AdminController {
     public AdminController(UserDao userDao, VehicleDao vehicleDao) {
         this.userDao = userDao;
         this.vehicleDao = vehicleDao;
+    }
+
+    @GetMapping("/admin")
+    public String adminDashboard(HttpSession session, Model model) {
+        User currentUser = (User) session.getAttribute("currentUser");
+
+        if (currentUser == null || currentUser.getRole() != 3) {
+            return "redirect:/loginPage";
+        }
+
+        List<User> users = userDao.getAllUsers();
+        List<Vehicle> listings = vehicleDao.getAllVehicles();
+        List<Vehicle> flaggedListings = vehicleDao.getFlaggedVehicles();
+
+//        debug for ads not showing in admindash
+//        System.out.println("Flagged listings found: " + flaggedListings.size());
+
+        model.addAttribute("users", users);
+        model.addAttribute("listings", listings);
+        model.addAttribute("flaggedListings", flaggedListings);
+
+        return "adminDashboard";
     }
 
     @PostMapping("/admin/deleteUser")
@@ -80,15 +105,18 @@ public class AdminController {
         return "redirect:/admin?success=ListingUpdated";
     }
     @PostMapping("/admin/flagListing")
-    public String flagListing(@RequestParam Long listingId) {
+    public String flagListing(@RequestParam("listingId") Long listingId,
+                              HttpServletRequest request) {
         vehicleDao.setFlagStatus(listingId, true);
-        return "redirect:/admin";
+        return "redirect:" + request.getHeader("Referer");
     }
 
     @PostMapping("/admin/unflagListing")
-    public String unflagListing(@RequestParam Long listingId) {
+    public String unflagListing(@RequestParam("listingId") Long listingId,
+                                HttpServletRequest request) {
         vehicleDao.setFlagStatus(listingId, false);
-        return "redirect:/admin";
+        return "redirect:" + request.getHeader("Referer");
     }
+
 
 }
