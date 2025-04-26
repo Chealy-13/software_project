@@ -97,7 +97,37 @@
             </table>
         </div>
     </div>
-</div>
+        <div class="card shadow mt-5">
+            <div class="card-header bg-danger text-white fw-bold">
+                Flagged Listings
+            </div>
+            <div class="card-body">
+                <div class="row" th:if="${flaggedListings != null and !flaggedListings.isEmpty()}">
+                    <div class="col-md-4 mb-4" th:each="vehicle : ${flaggedListings}">
+                    <div class="card h-100 shadow-sm">
+                            <img th:src="@{${vehicle.image_url[0]}}" class="card-img-top" alt="Vehicle Image" th:if="${vehicle.image_url != null and vehicle.image_url.size() > 0}"/>
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${vehicle.make + ' ' + vehicle.model}"></h5>
+                                <h6 class="card-subtitle mb-2 text-muted" th:text="${vehicle.year + ' | ' + vehicle.category}"></h6>
+                                <p><strong>Price:</strong> €<span th:text="${vehicle.price}"></span></p>
+                                <p><strong>Mileage:</strong> <span th:text="${vehicle.mileage + ' km'}"></span></p>
+                                <p><strong>Fuel:</strong> <span th:text="${vehicle.fuelType}"></span></p>
+                                <p><strong>Transmission:</strong> <span th:text="${vehicle.transmission}"></span></p>
+                                <p><strong>Location:</strong> <span th:text="${vehicle.location}"></span></p>
+                                <p><strong>Description:</strong> <span th:text="${vehicle.description}"></span></p>
+
+                                <form action="/admin/unflagListing" method="post" class="d-inline">
+                                    <input type="hidden" name="listingId" th:value="${vehicle.id}">
+                                    <button class="btn btn-sm btn-outline-secondary w-100 mt-2">Unflag</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p th:if="${flaggedListings == null or flaggedListings.isEmpty()}" class="text-muted">No flagged listings at the moment.</p>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>
