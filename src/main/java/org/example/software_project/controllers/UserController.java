@@ -90,12 +90,14 @@ public class UserController {
         try {
             boolean registered = userDao.register(newUser);
             if (registered) {
-                //get saved user from db to get the right id
+                // Get saved user from DB to get the right ID
                 User savedUser = userDao.getUserByEmail(email);
                 if (savedUser != null) {
                     session.setAttribute("currentUser", savedUser);
 
-                    //log the user id to make sure its correct
+                     emailPassword.sendConfirmationEmail(savedUser.getEmail(), savedUser.getFirstName());
+
+                    // Log the user ID to make sure it's correct
                     log.debug("User stored in session after registration: ID={} Username={}", savedUser.getId(), savedUser.getUsername());
 
                     return "redirect:/";
@@ -112,19 +114,18 @@ public class UserController {
 
         model.addAttribute("errorMessage", "An unexpected error occurred. Please try again.");
         return "registration";
+
     }
-
-
-    /**
-     * This manages the login process by validating user credentials, authenticating the user, and
-     * redirecting them to the home page when login is successful.
-     *
-     * @param //username The username provided by the user during the login stage.
-     * @param //session  The current HTTP session to store the authenticated user's details.
-     *                   Redirects to "index" if successfully logged in or back to "login" if authentication fails.
-     * @param// password The password provided by the user.
-     * @param// model    The model object to pass notifications.
-     */
+        /**
+         * This manages the login process by validating user credentials, authenticating the user, and
+         * redirecting them to the home page when login is successful.
+         *
+         * @param //username The username provided by the user during the login stage.
+         * @param //session  The current HTTP session to store the authenticated user's details.
+         *                   Redirects to "index" if successfully logged in or back to "login" if authentication fails.
+         * @param// password The password provided by the user.
+         * @param// model    The model object to pass notifications.
+         */
 
     @GetMapping("/loginPage")
     public String showLoginForm() {
