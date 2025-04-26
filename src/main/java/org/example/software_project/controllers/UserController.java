@@ -283,22 +283,6 @@ public class UserController {
         }
     }
 
-    @GetMapping("/admin")
-    public String adminDashboard(HttpSession session, Model model) {
-        User currentUser = (User) session.getAttribute("currentUser");
-
-        if (currentUser == null || currentUser.getRole() != 3) {
-            return "redirect:/loginPage";
-        }
-
-        List<User> users = userDao.getAllUsers();
-        List<Vehicle> listings = vehicleDao.getAllVehicles();
-
-        model.addAttribute("users", users);
-        model.addAttribute("listings", listings);
-
-        return "adminDashboard";
-    }
 
     @GetMapping("/forgotPassword")
     public String showForgotPasswordForm() {

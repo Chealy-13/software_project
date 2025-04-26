@@ -25,4 +25,6 @@ public interface VehicleDao {
     Vehicle getVehicleById(Long vehicleId);
 
     void setFlagStatus(Long listingId, boolean flagged);
+
+    List<Vehicle> getFlaggedVehicles();
 }
