@@ -10,4 +10,6 @@ public interface FavoriteDao {
     List<Vehicle> getFavoritesByUser(Long userId);
 
     boolean isFavorite(Long userId, Long vehicleId);
+
+    List<Vehicle> getTopFavoritedVehiclesWithCounts();
 }
