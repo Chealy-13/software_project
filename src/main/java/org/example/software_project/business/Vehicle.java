@@ -26,6 +26,7 @@ public class Vehicle {
     private List<String> image_url;
     private String imageUrl;
     private boolean flagged;
+    private int favoriteCount;
 
 
 
