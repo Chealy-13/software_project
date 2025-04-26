@@ -1,6 +1,5 @@
 package org.example.software_project.Persistence;
 
-import org.example.software_project.business.User;
 import org.example.software_project.business.Vehicle;
 import org.springframework.stereotype.Component;
 
@@ -404,6 +403,27 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public List<Vehicle> getFlaggedVehicles() {
+        List<Vehicle> flaggedVehicles = new ArrayList<>();
+        String sql = "SELECT * FROM vehicles WHERE flagged = true";
+
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Vehicle vehicle = mapRowToVehicle(rs);
+                flaggedVehicles.add(vehicle);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return flaggedVehicles;
+    }
+
 }
 
 
