@@ -2,6 +2,7 @@ package org.example.software_project.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.example.software_project.Persistence.FavoriteDao;
 import org.example.software_project.Persistence.UserDao;
 import org.example.software_project.Persistence.VehicleDao;
 import org.example.software_project.business.User;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 @Controller
@@ -20,11 +23,13 @@ public class AdminController {
 
     private final UserDao userDao;
     private final VehicleDao vehicleDao;
+    private final FavoriteDao favoriteDao;
 
     @Autowired
-    public AdminController(UserDao userDao, VehicleDao vehicleDao) {
+    public AdminController(UserDao userDao, VehicleDao vehicleDao, FavoriteDao favoriteDao) {
         this.userDao = userDao;
         this.vehicleDao = vehicleDao;
+        this.favoriteDao = favoriteDao;
     }
 
     @GetMapping("/admin")
@@ -38,13 +43,52 @@ public class AdminController {
         List<User> users = userDao.getAllUsers();
         List<Vehicle> listings = vehicleDao.getAllVehicles();
         List<Vehicle> flaggedListings = vehicleDao.getFlaggedVehicles();
+        List<Vehicle> topFavoritedVehicles = favoriteDao.getTopFavoritedVehiclesWithCounts();
 
 //        debug for ads not showing in admindash
 //        System.out.println("Flagged listings found: " + flaggedListings.size());
 
+        //calc stats
+        long totalUsers = users.size();
+        long totalListings = listings.size();
+        long totalFlagged = flaggedListings.size();
+
+
+        //calc new users this week
+        long newUsersThisWeek = users.stream()
+                .filter(user -> {
+                    if (user.getCreatedAt() != null) {
+                        LocalDate createdDate = user.getCreatedAt()
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDate();
+                        return createdDate.isAfter(LocalDate.now().minusDays(7));
+                    }
+                    return false;
+                })
+                .count();
+
+        //create list of new users and thier details
+        List<User> newUsers = users.stream()
+                .filter(user -> user.getCreatedAt() != null &&
+                        user.getCreatedAt().atZone(ZoneId.systemDefault())
+                                .toLocalDate()
+                                .isAfter(LocalDate.now().minusDays(7))
+                )
+                .toList();
+
+
+        //adding attributes to model
         model.addAttribute("users", users);
         model.addAttribute("listings", listings);
         model.addAttribute("flaggedListings", flaggedListings);
+        model.addAttribute("topFavoritedVehicles", topFavoritedVehicles);
+        //adding counts/stats to model
+        model.addAttribute("totalUsers", totalUsers);
+        model.addAttribute("totalListings", totalListings);
+        model.addAttribute("totalFlagged", totalFlagged);
+        model.addAttribute("newUsersThisWeek", newUsersThisWeek);
+        model.addAttribute("newUsers", newUsers);
+
 
         return "adminDashboard";
     }
