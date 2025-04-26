@@ -15,8 +15,70 @@
         <div class="dashboard-heading text-center">
             <h2 class="text-danger m-0">Admin Dashboard</h2>
         </div>
+        <div class="card shadow mt-5 mb-5">
+            <div class="card-header bg-primary text-white fw-bold">
+                Dashboard Statistics
+            </div>
+            <div class="card-body">
+                <canvas id="statsChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+        <div class="card shadow mt-5">
+            <div class="card-header bg-primary text-white fw-bold">
+                New Users Registered This Week
+            </div>
+            <div class="card-body">
+                <div th:if="${newUsers != null and !newUsers.isEmpty()}">
+                    <table class="table table-striped align-middle">
+                        <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Created At</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user : ${newUsers}">
+                            <td th:text="${user.id}"></td>
+                            <td th:text="${user.username}"></td>
+                            <td th:text="${user.email}"></td>
+                            <td th:text="${#temporals.format(user.createdAt, 'dd MMM yyyy')}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p th:if="${newUsers == null or newUsers.isEmpty()}" class="text-muted">No new users registered this week.</p>
+            </div>
+        </div>
 
-    <div class="card mb-5 shadow">
+
+        <div class="card shadow mt-5 mb-5">
+            <div class="card-header bg-success text-white fw-bold">
+                Top 3 Most Favorited Listings
+            </div>
+            <div class="card-body">
+                <div class="row" th:if="${topFavoritedVehicles != null and !topFavoritedVehicles.isEmpty()}">
+                    <div class="col-md-4 mb-4" th:each="vehicle : ${topFavoritedVehicles}">
+                        <div class="card h-100 shadow-sm">
+                            <img th:src="@{${vehicle.image_url[0]}}" class="card-img-top" th:if="${vehicle.image_url != null and vehicle.image_url.size() > 0}" alt="Vehicle Image" />
+                            <div class="card-body">
+                                <h5 class="card-title" th:text="${vehicle.make + ' ' + vehicle.model}"></h5>
+                                <h6 class="card-subtitle mb-2 text-muted" th:text="${vehicle.year + ' | ' + vehicle.category}"></h6>
+                                <p><strong>Price:</strong> €<span th:text="${vehicle.price}"></span></p>
+                                <p><strong>Saves:</strong> <span th:text="${vehicle.favoriteCount}"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p th:if="${topFavoritedVehicles == null or topFavoritedVehicles.isEmpty()}" class="text-muted">No favorited listings yet.</p>
+            </div>
+        </div>
+
+
+
+
+        <div class="card mb-5 shadow">
         <div class="card-header bg-dark text-white fw-bold">
             All Users
         </div>
@@ -128,6 +190,42 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script th:inline="javascript">
+        let statsChart = new Chart(document.getElementById('statsChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Total Users', 'Total Listings', 'Flagged Listings'],
+                datasets: [{
+                    label: 'Counts',
+                    data: [
+                        /*[[${totalUsers}]]*/,
+                        /*[[${totalListings}]]*/,
+                        /*[[${totalFlagged}]]*/
+                    ],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(255, 206, 86, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
 
 </body>
 </html>
