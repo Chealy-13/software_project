@@ -16,60 +16,65 @@
 <p th:if="${errorMessage != null}" th:text="${errorMessage}"></p>
 
 <div class="container d-flex justify-content-center mt-4">
-<div id="registerForm" class="col-md-6 col-lg-4 p-4 border border-light rounded-3 bg-light shadow-sm" style="border: 2px solid #ccc; padding: 20px; border-radius: 8px; background-color: #f9f9f9;">
-    <h2 class="text-center">Register an Account</h2><br>
-    <div class="row justify-content-center">
-    <div class="cold-md-3">
-    <form method="post" th:action="@{/register}">
-        <div class="mb-3">
-            <label for="username" class="form-label" style="font-weight: bold;">Username:</label><br>
-            <input type="text" id="username" name="username" class="form-control" required><br>
-        </div>
-        <br>
-        <div class="mb-3">
-            <label for="password" class="form-label" style="font-weight: bold;">Password:</label><br>
-            <input type="password" id="password" name="password" class="form-control" required><br>
-        </div>
-        <br>
-        <div class="mb-3">
-            <label for="confirmPass" class="form-label" style="font-weight: bold;">Confirm your password:</label><br>
-            <input type="password" id="confirmPass" name="confirmPass" class="form-control" required><br>
-        </div>
-        <br>
-        <div class="mb-3">
-            <label for="firstName" class="form-label" style="font-weight: bold;">First name:</label><br>
-            <input type="text" id="firstName" name="firstName" class="form-control"><br>
-        </div>
-        <br>
-        <div class="mb-3">
-            <label for="secondName" class="form-label" style="font-weight: bold;">Last name:</label><br>
-            <input type="text" id="secondName" name="secondName" class="form-control"><br>
-        </div>
-        <br>
-        <div class="mb-3">
-            <label for="email" class="form-label" style="font-weight: bold;">Email:</label><br>
-            <input type="email" id="email" name="email" class="form-control" required><br>
-        </div>
-        <br>
-        <div class="mb-3">
-            <label for="phone" class="form-label" style="font-weight: bold;">Phone:</label><br>
-            <input type="text" id="phone" name="phone" class="form-control" required><br>
-        </div>
-        <br>
-        <div class="mb-3">
-            <label for="role" class="form-label" style="font-weight: bold;">Role:</label>
-            <select id="role" name="role" class="form-select">
-                <option value="1">Buyer</option>
-                <option value="2">Seller</option>
-                <option value="3">Admin</option>
-            </select>
-        </div>
-        <br>
+    <div id="registerForm" class="col-md-6 col-lg-4 p-4 border border-light rounded-3 bg-light shadow-sm"
+         style="border: 2px solid #ccc; padding: 20px; border-radius: 8px; background-color: #f9f9f9;">
+        <h2 class="text-center">Register an Account</h2><br>
+        <div class="row justify-content-center">
+            <div class="cold-md-3">
+                <form method="post" th:action="@{/register}">
+                    <div class="mb-3">
+                        <label for="username" class="form-label" style="font-weight: bold;">Username:</label><br>
+                        <input type="text" id="username" name="username" class="form-control" required><br>
+                    </div>
+                    <br>
+                    <div class="mb-3">
+                        <label for="password" class="form-label" style="font-weight: bold;">Password:</label><br>
+                        <input type="password" id="password" name="password" class="form-control" required><br>
+                    </div>
+                    <br>
+                    <div class="mb-3">
+                        <label for="confirmPass" class="form-label" style="font-weight: bold;">Confirm your
+                            password:</label><br>
+                        <input type="password" id="confirmPass" name="confirmPass" class="form-control" required><br>
+                    </div>
+                    <br>
+                    <div class="mb-3">
+                        <label for="firstName" class="form-label" style="font-weight: bold;">First name:</label><br>
+                        <input type="text" id="firstName" name="firstName" class="form-control"><br>
+                    </div>
+                    <br>
+                    <div class="mb-3">
+                        <label for="secondName" class="form-label" style="font-weight: bold;">Last name:</label><br>
+                        <input type="text" id="secondName" name="secondName" class="form-control"><br>
+                    </div>
+                    <br>
+                    <div class="mb-3">
+                        <label for="email" class="form-label" style="font-weight: bold;">Email:</label><br>
+                        <input type="email" id="email" name="email" class="form-control" required><br>
+                    </div>
 
-        <button type="submit" class="btn btn-danger w-100">Submit</button>
-    </form>
+                    </div>
+                    <br>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label" style="font-weight: bold;">Phone:</label><br>
+                        <input type="text" id="phone" name="phone" class="form-control" required
+                        pattern="^\+?\d{10,15}$" title="Phone number must be between 10 and 15 digits, and can optionally start with a '+'">
+                    </div>
+                    <br>
+                    <div class="mb-3">
+                        <label for="role" class="form-label" style="font-weight: bold;">Role:</label>
+                        <select id="role" name="role" class="form-select">
+                            <option value="1">Buyer</option>
+                            <option value="2">Seller</option>
+                            <option value="3">Admin</option>
+                        </select>
+                    </div>
+                    <br>
+
+                    <button type="submit" class="btn btn-danger w-100">Submit</button>
+                </form>
+            </div>
+        </div>
     </div>
-    </div>
-</div>
 </body>
 </html>

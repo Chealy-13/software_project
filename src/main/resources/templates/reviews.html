@@ -8,58 +8,84 @@
 <body>
 
 <div th:replace="~{Additional/menu :: menu-bar}"></div>
-<div class="container mt-4">
-    <h2>Reviews for Seller</h2>
+<div class="container mt-4" id="pageContent">
+    <div class="container mt-4">
+        <button class="btn btn-outline-dark mb-4" onclick="toggleDarkMode()" id="darkModeBtn">
+            🌙 Dark Mode
+        </button>
 
-    <form method="get" th:action="@{/reviews}">
-        <label for="sellerSelect" class="form-label">Choose a Seller:</label>
-        <select id="sellerSelect" name="sellerId" class="form-select mb-3" onchange="this.form.submit()">
-            <option th:each="seller : ${sellers}"
-                    th:value="${seller.id}"
-                    th:text="${seller.name}"
-                    th:selected="${seller.id == sellerId}">
-            </option>
-        </select>
-    </form>
+        <h2>Reviews for Seller</h2>
 
-
-    <form th:action="@{/reviews/add}" method="post" class="mb-4">
-        <input type="hidden" name="sellerId" th:value="${sellerId}">
-        <input type="hidden" name="userId" th:value="${session.currentUser?.id}"/>
-
-        <label class="form-label">Rating:</label>
-        <select name="rating" class="form-select mb-2" required>
-            <option value="1">1 - Poor</option>
-            <option value="2">2 - Fair</option>
-            <option value="3">3 - Good</option>
-            <option value="4">4 - Very Good</option>
-            <option value="5">5 - Excellent</option>
-        </select>
-
-        <label class="form-label">Comment:</label>
-        <textarea name="comment" class="form-control mb-2" required></textarea>
-
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-
-
-    <h2>Reviews for Seller: <span th:text="${sellerId}"></span></h2>
-    <div th:each="review : ${reviews}" class="border p-2 mb-2">
-        <strong>
-            <span th:each="i : ${#numbers.sequence(1, review.rating)}">⭐</span>
-        </strong>
-        <p th:text="${review.comment}"></p>
-
-        <form th:action="@{/reviews/delete}" method="post" th:if="${session.currentUser?.id} == ${review.user_id}">
-            <input type="hidden" name="reviewId" th:value="${review.id}"/>
-            <input type="hidden" name="sellerId" th:value="${sellerId}"/>
-            <input type="hidden" name="userId" th:value="${session.currentUser?.id}"/>
-            <button class="btn btn-sm btn-danger mt-2">Delete</button>
+        <form method="get" th:action="@{/reviews}">
+            <label for="sellerSelect" class="form-label">Choose a Seller:</label>
+            <select id="sellerSelect" name="sellerId" class="form-select mb-3" onchange="this.form.submit()">
+                <option th:each="seller : ${sellers}"
+                        th:value="${seller.id}"
+                        th:text="${seller.name}"
+                        th:selected="${seller.id == sellerId}">
+                </option>
+            </select>
         </form>
 
-    </div>
 
-    <a th:href="@{/}" class="btn btn-secondary mt-3">Back to Home</a>
+        <form th:action="@{/reviews/add}" method="post" class="mb-4">
+            <input type="hidden" name="sellerId" th:value="${sellerId}">
+            <input type="hidden" name="userId" th:value="${session.currentUser?.id}"/>
+
+            <label class="form-label">Rating:</label>
+            <select name="rating" class="form-select mb-2" required>
+                <option value="1">1 - Poor</option>
+                <option value="2">2 - Fair</option>
+                <option value="3">3 - Good</option>
+                <option value="4">4 - Very Good</option>
+                <option value="5">5 - Excellent</option>
+            </select>
+
+            <label class="form-label">Comment:</label>
+            <textarea name="comment" class="form-control mb-2" required></textarea>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+
+        <h2>Reviews for Seller: <span th:text="${sellerId}"></span></h2>
+        <div th:each="review : ${reviews}" class="border p-2 mb-2">
+            <strong>
+                <span th:each="i : ${#numbers.sequence(1, review.rating)}">⭐</span>
+            </strong>
+            <p th:text="${review.comment}"></p>
+
+            <form th:action="@{/reviews/delete}" method="post" th:if="${session.currentUser?.id} == ${review.user_id}">
+                <input type="hidden" name="reviewId" th:value="${review.id}"/>
+                <input type="hidden" name="sellerId" th:value="${sellerId}"/>
+                <input type="hidden" name="userId" th:value="${session.currentUser?.id}"/>
+                <button class="btn btn-sm btn-danger mt-2">Delete</button>
+            </form>
+
+        </div>
+
+        <a th:href="@{/}" class="btn btn-secondary mt-3">Back to Home</a>
+
+        <script>
+            function toggleDarkMode() {
+                document.body.classList.toggle('bg-dark');
+                document.body.classList.toggle('text-white');
+
+                const darkModeBtn = document.getElementById('darkModeBtn');
+
+                if (document.body.classList.contains('bg-dark')) {
+                    darkModeBtn.innerHTML = '🌙 Dark Mode';  // dark mode
+                    darkModeBtn.classList.remove('btn-outline-dark');
+                    darkModeBtn.classList.add('btn-outline-light');
+                } else {
+                    darkModeBtn.innerHTML = '🌙 Dark Mode';  // light mode
+                    darkModeBtn.classList.remove('btn-outline-light');
+                    darkModeBtn.classList.add('btn-outline-dark');
+                }
+            }
+        </script>
+    </div>
 </div>
+
 </body>
 </html>

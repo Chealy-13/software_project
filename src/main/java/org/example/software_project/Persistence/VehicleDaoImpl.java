@@ -140,6 +140,20 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
     }
 
 
+    /**
+     * Searches for vehicles based on various filtering such as keyword, price range, year range, mileage, etc.
+     *
+     * @param keyword  the keyword to search for in vehicle make or model
+     * @param minPrice the minimum price of the vehicle
+     * @param maxPrice the maximum price of the vehicle
+     * @param minYear  the minimum year of the vehicle
+     * @param maxYear  the maximum year of the vehicle
+     * @param mileage  the maximum mileage of the vehicle
+     * @param fuelType the type of fuel (Petrol, Diesel, etc.)
+     * @param location the location to search in (optional)
+     * @param sortBy   sort results by ("price", "year", or "newest")
+     * @return a list of vehicles matching the search criteria
+     */
     @Override
     public List<Vehicle> searchVehicles(String keyword, Integer minPrice, Integer maxPrice, Integer minYear, Integer maxYear, Integer mileage, String fuelType, String location, String sortBy) {
         List<Vehicle> vehicles = new ArrayList<>();
@@ -281,6 +295,13 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
         return vehicles;
     }
 
+
+    /**
+     * Retrieves all vehicles from the database along with their associated images.
+     * For each vehicle, an additional query is performed to fetch and set image urls.
+     *
+     * @return a list of all vehicles, each populated with its corresponding image urls
+     */
     @Override
     public List<Vehicle> getAllVehiclesWithImages() {
         List<Vehicle> vehicles = new ArrayList<>();
@@ -308,6 +329,12 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
         return vehicles;
     }
 
+    /**
+     * Retrieves the list of image urls associated with a specific vehicle from the database.
+     *
+     * @param vehicleId the ID of the vehicle whose images are to be retrieved
+     * @return a list of image URLs for the specified vehicle
+     */
     private List<String> getVehicleImages(Long vehicleId) {
         List<String> imageUrls = new ArrayList<>();
         Connection conn = super.getConnection();
