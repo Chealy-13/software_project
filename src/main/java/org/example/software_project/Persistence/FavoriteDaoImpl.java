@@ -97,7 +97,8 @@ public class FavoriteDaoImpl extends MySQLDao implements FavoriteDao{
                 rs.getString("status"),
                 images,
                 images.isEmpty() ? null : images.get(0),
-                rs.getBoolean("flagged")
+                rs.getBoolean("flagged"),
+                rs.getInt("favorite_count")
         );
     }
 
@@ -145,5 +146,36 @@ public class FavoriteDaoImpl extends MySQLDao implements FavoriteDao{
 
         return false;
     }
+
+    @Override
+    public List<Vehicle> getTopFavoritedVehiclesWithCounts() {
+        List<Vehicle> vehicles = new ArrayList<>();
+        String sql = """
+        SELECT v.*, COUNT(f.id) AS total_saves
+        FROM vehicles v
+        JOIN favorites f ON v.id = f.vehicle_id
+        GROUP BY v.id
+        ORDER BY total_saves DESC
+        LIMIT 3
+        """;
+
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                Vehicle vehicle = mapRowToVehicle(rs);
+                vehicle.setFavoriteCount(rs.getInt("total_saves"));
+                vehicles.add(vehicle);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return vehicles;
+    }
+
+
 
 }

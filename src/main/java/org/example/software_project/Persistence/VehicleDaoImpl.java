@@ -134,7 +134,8 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
                 rs.getString("status"),
                 images,
                 images.isEmpty() ? null : images.get(0),
-                rs.getBoolean("flagged")
+                rs.getBoolean("flagged"),
+                rs.getInt("favorite_count")
         );
     }
 
@@ -267,7 +268,8 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
                             rs.getString("status"),
                             images, // List of image URLs
                             images.isEmpty() ? null : images.get(0),
-                            rs.getBoolean("flagged")
+                            rs.getBoolean("flagged"),
+                            rs.getInt("favorite_count")
                     );
 
                     vehicles.add(vehicle);
@@ -381,7 +383,8 @@ public class VehicleDaoImpl extends MySQLDao implements VehicleDao {
                             rs.getString("status"),
                             getVehicleImages(rs.getLong("id")),
                             null, //setting img url to null just to match cnstructor.
-                            rs.getBoolean("flagged")
+                            rs.getBoolean("flagged"),
+                            rs.getInt("favorite_count")
                     );
                 }
             }
